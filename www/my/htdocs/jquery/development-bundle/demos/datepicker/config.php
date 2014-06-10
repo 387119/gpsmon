@@ -1,0 +1,1 @@
+/var/www/winet/gpsmod/htdocs/new/config.php

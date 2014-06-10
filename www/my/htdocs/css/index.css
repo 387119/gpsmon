@@ -1,0 +1,12 @@
+.olLayerGooglePoweredBy{
+    z-index:-10000 !important;
+}
+html, body {
+    min-height: 600px;;
+    padding: 0;
+    margin: 0;
+    background-color: #E5EFFD;
+    font-family: Arial;
+    font-size: 10pt;
+}
+

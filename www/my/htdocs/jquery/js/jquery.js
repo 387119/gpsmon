@@ -1,0 +1,1 @@
+/var/www/winet/gpsmod/htdocs/jquery/js/jquery-1.7.2.min.js

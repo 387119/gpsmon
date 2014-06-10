@@ -1,0 +1,6 @@
+
+
+#php /usr/lib/gpsmod/mega-gps/mega-gps-3.44/parsing.php
+php /usr/lib/gpsmod/mega-gps/mega-gps-3.55/parsing.php
+
+psql -d gps -U tgps -h db1 -f /usr/lib/gpsmod/sql/newdatafromtrackers.sql

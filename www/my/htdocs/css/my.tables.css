@@ -1,0 +1,551 @@
+/* ------------------
+ styling for the tables 
+   ------------------   */
+
+
+body
+{
+	line-height: 1.6em;
+}
+
+.table1
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	background: #fff;
+	border-collapse: collapse;
+	text-align: left;
+}
+.table1 th
+{
+	font-size: 14px;
+	font-weight: normal;
+	color: #039;
+	padding: 10px 8px;
+	border-bottom: 2px solid #6678b1;
+}
+.table1 td
+{
+	color: #669;
+	padding: 9px 8px 0px 8px;
+}
+.table1 tbody tr:hover td
+{
+	color: #009;
+}
+
+
+.table2
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	background: #fff;
+	border-collapse: collapse;
+	text-align: left;
+}
+.table2 th
+{
+	font-size: 14px;
+	font-weight: normal;
+	color: #039;
+	padding: 10px 8px;
+	border-bottom: 2px solid #6678b1;
+}
+.table2 td
+{
+	border-bottom: 1px solid #ccc;
+	color: #669;
+	padding: 6px 8px;
+}
+.table2 tbody tr:hover td
+{
+	color: #009;
+}
+#table2 table thead tr .headerSortUp {
+	background-image: url(/table-images/asc.gif);
+}
+#table2 table thead tr .headerSortDown {
+	background-image: url(/table-images/desc.gif);
+}
+#table2 table thead tr .headerSortDown, #table2 table thead tr .headerSortUp {
+background-color: #8dbdd8;
+}
+
+
+
+
+.table3
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table3 th
+{
+	padding: 8px 2px;
+	font-weight: normal;
+	font-size: 14px;
+	border-bottom: 2px solid #6678b1;
+	border-right: 30px solid #fff;
+	border-left: 30px solid #fff;
+	color: #039;
+}
+.table3 td
+{
+	padding: 12px 2px 0px 2px;
+	border-right: 30px solid #fff;
+	border-left: 30px solid #fff;
+	color: #669;
+}
+
+
+.table4
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table4 th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	background: #b9c9fe;
+	border-top: 4px solid #aabcfe;
+	border-bottom: 1px solid #fff;
+	color: #039;
+}
+.table4 td
+{
+	padding: 8px;
+	background: #e8edff; 
+	border-bottom: 1px solid #fff;
+	color: #669;
+	border-top: 1px solid transparent;
+}
+.table4 tr:hover td
+{
+	background: #d0dafd;
+	color: #339;
+}
+
+
+.table5
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: center;
+	border-collapse: collapse;
+	border-top: 7px solid #9baff1;
+	border-bottom: 7px solid #9baff1;
+}
+.table5 th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	background: #e8edff;
+	border-right: 1px solid #9baff1;
+	border-left: 1px solid #9baff1;
+	color: #039;
+}
+.table5 td
+{
+	padding: 8px;
+	background: #e8edff; 
+	border-right: 1px solid #aabcfe;
+	border-left: 1px solid #aabcfe;
+	color: #669;
+}
+
+
+.table6
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table6 th
+{
+	font-size: 14px;
+	font-weight: normal;
+	padding: 10px 8px;
+	color: #039;
+}
+.table6 td
+{
+	padding: 8px;
+	color: #669;
+}
+.table6 .odd
+{
+	background: #e8edff; 
+}
+
+.table7
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table7 th
+{
+	font-size: 14px;
+	font-weight: normal;
+	padding: 12px 15px;
+	border-right: 1px solid #fff;
+	border-left: 1px solid #fff;
+	color: #039;
+}
+.table7 td
+{
+	padding: 8px 15px;
+	border-right: 1px solid #fff;
+	border-left: 1px solid #fff;
+	color: #669;
+}
+.table7-odd
+{
+	background: #eff2ff;
+}
+.table7-even
+{
+	background: #e8edff;
+}
+.table7 #table7-adventure, #table7 #table7-children
+{
+	background: #d0dafd;
+	border-bottom: 1px solid #c8d4fd;
+}
+.table7 #table7-comedy, #table7 #table7-action
+{
+	background: #dce4ff;
+	border-bottom: 1px solid #d6dfff;
+}
+
+
+.table8
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table8 th
+{
+	font-size: 14px;
+	font-weight: normal;
+	padding: 12px 15px;
+	color: #039;
+}
+.table8 td
+{
+	padding: 10px 15px;
+	color: #669;
+	border-top: 1px solid #e8edff;
+}
+.table8-first
+{
+	background: #d0dafd;
+	border-right: 10px solid transparent;
+	border-left: 10px solid transparent;
+}
+.table8 tr:hover td
+{
+	color: #339;
+	background: #eff2ff;
+}
+
+
+.table9
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	border: 1px solid #69c;
+}
+.table9 th
+{
+	padding: 12px 17px 12px 17px;
+	font-weight: normal;
+	font-size: 14px;
+	color: #039;
+	border-bottom: 1px dashed #69c;
+}
+.table9 td
+{
+	padding: 7px 17px 7px 17px;
+	color: #669;
+}
+.table9 tbody tr:hover td
+{
+	color: #339;
+	background: #d0dafd;
+}
+
+
+.table10
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	border: 1px solid #69c;
+}
+.table10 th
+{
+	padding: 15px 10px 10px 10px;
+	font-weight: normal;
+	font-size: 14px;
+	color: #039;
+}
+.table10 tbody
+{
+	background: #e8edff;
+}
+.table10 td
+{
+	padding: 10px;
+	color: #669;
+	border-top: 1px dashed #fff;
+}
+.table10 tbody tr:hover td
+{
+	color: #339;
+	background: #d0dafd;
+}
+
+
+.table11
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	border: 1px solid #6cf;
+}
+.table11 th
+{
+	padding: 20px;
+	font-weight: normal;
+	font-size: 13px;
+	color: #039;
+	text-transform: uppercase;
+	border-right: 1px solid #0865c2;
+	border-top: 1px solid #0865c2;
+	border-left: 1px solid #0865c2;
+	border-bottom: 1px solid #fff;
+}
+.table11 td
+{
+	padding: 10px 20px;
+	color: #669;
+	border-right: 1px dashed #6cf;
+}
+
+
+.table12
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table12 thead th.table12-company
+{
+	background: #b9c9fe url('table-images/left.png') left -1px no-repeat;
+}
+.table12 thead th.table12-q4
+{
+	background: #b9c9fe url('table-images/right.png') right -1px no-repeat;
+}
+.table12 th
+{
+	padding: 8px;
+	font-weight: normal;
+	font-size: 13px;
+	color: #039;
+	background: #b9c9fe;
+}
+.table12 td
+{
+	padding: 8px;
+	background: #e8edff;
+	border-top: 1px solid #fff;
+	color: #669;
+}
+.table12 tfoot td.table12-foot-left
+{
+	background: #e8edff url('table-images/botleft.png') left bottom no-repeat;
+}
+.table12 tfoot td.table12-foot-right
+{
+	background: #e8edff url('table-images/botright.png') right bottom no-repeat;
+}
+.table12 tbody tr:hover td
+{
+	background: #d0dafd;
+}
+
+
+.table13
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	background: url('table-images/blurry.jpg') 330px 59px no-repeat;
+}
+.table13 th
+{
+	padding: 12px;
+	font-weight: normal;
+	font-size: 14px;
+	color: #339;
+}
+.table13 td
+{
+	padding: 9px 12px;
+	color: #669;
+	border-top: 1px solid #fff;
+}
+.table13 tfoot td
+{
+	font-size: 11px;
+}
+.table13 tbody td
+{
+	background: url('table-images/back.png');
+}
+* html #table13 tbody td
+{
+	/* 
+	   ----------------------------
+		PUT THIS ON IE6 ONLY STYLE 
+		AS THE RULE INVALIDATES
+		YOUR STYLESHEET
+	   ----------------------------
+	*/
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='table-images/back.png',sizingMethod='crop');
+	background: none;
+}	
+.table13 tbody tr:hover td
+{
+	color: #339;
+	background: none;
+}
+
+
+.table14
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.table14 th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	background: #b9c9fe url('table-images/gradhead.png') repeat-x;
+	border-top: 2px solid #d3ddff;
+	border-bottom: 1px solid #fff;
+	color: #039;
+}
+.table14 td
+{
+	padding: 8px; 
+	border-bottom: 1px solid #fff;
+	color: #669;
+	border-top: 1px solid #fff;
+	background: #e8edff url('table-images/gradback.png') repeat-x;
+}
+.table14 tfoot tr td
+{
+	background: #e8edff;
+	font-size: 12px;
+	color: #99c;
+}
+.table14 tbody tr:hover td
+{
+	background: #d0dafd url('table-images/gradhover.png') repeat-x;
+	color: #339;
+}
+.table14 input
+{
+/* padding: 10px;*/
+ border: 1px solid #444444;
+/* background: #CCFF00;*/
+}
+.table15
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	background: url('table-images/pattern.png');
+}
+.table15 thead tr
+{
+	background: url('table-images/pattern-head.png');
+}
+.table15 th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	border-bottom: 1px solid #fff;
+	color: #039;
+}
+.table15 td
+{
+	padding: 8px; 
+	border-bottom: 1px solid #fff;
+	color: #669;
+	border-top: 1px solid transparent;
+}
+.table15 tbody tr:hover td
+{
+	color: #339;
+	background: #fff;
+}
+
+
+.table16
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+	background: url('table-images/patternb.png');
+}
+.table16 thead tr
+{
+	background: url('table-images/patternb-head.png');
+}
+.table16 th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	border-bottom: 1px solid #fff;
+	color: #039;
+}
+.table16 td
+{
+	padding: 8px; 
+	border-bottom: 1px solid #fff;
+	color: #669;
+	border-top: 1px solid transparent;
+}
+.table16 tbody tr:hover td
+{
+	color: #339;
+	background: #cdcdee;
+}

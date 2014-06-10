@@ -1,0 +1,164 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+</head>
+<body style="font-family:Tahoma">
+        Сводный отчет за период с <?="$_REQUEST[datefrom] $_REQUEST[timefrom]"?> по <?="$_REQUEST[dateto] $_REQUEST[timeto]"?>
+        <table border="1" cellpadding="5" cellspacing="0" style="font-size: 9pt">
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>Тип ТС</th>
+                <th>Госномер</th>
+                <th>Время<br />движения</th>
+                <th>Время<br />стоянки</th>
+                <th>Средняя<br />скорость,&nbsp;км/ч</th>
+                <th>Максимальная<br />скорость,&nbsp;км/ч</th>
+                <th>Пробег,&nbsp;км</th>
+                <th>Количество<br />заправок</th>
+                <!-- <th>Место<br />заправки</th> -->
+                <!-- <th>Заправка,&nbsp;м3</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <?
+                include("../../config.php");
+                
+                $row = 1; // текущая строка
+
+                $datefrom = date('Y-m-d', strtotime($_REQUEST['datefrom']));
+                $dateto = date('Y-m-d', strtotime($_REQUEST['dateto']));
+                $timefrom = $_REQUEST['timefrom'];
+                $timeto = $_REQUEST['timeto'];
+                
+                foreach ($_REQUEST['cars'] as $car=>$value) {
+                    $sql = "select gosnum, name, dutmin[1] dut1_min, dutmax[1] dut1_max, dutlitr[1] dut1_litr, dutmin[2] dut2_min, dutmax[2] dut2_max,dutlitr[2] dut2_litr from cars where carid=$car;";
+                    $res = pg_query($sql);
+                    extract (pg_fetch_array($res), EXTR_OVERWRITE);
+                    
+                    if ($dut1_min && $dut1_max && $dut1_litr) {
+                      $tank1_installed = true; // бак №1 установлен и его настройки заполнены
+                    } else {
+                      $tank1_installed = false;
+                    }
+                    if ($dut2_min && $dut2_max && $dut2_litr) {
+                      $tank2_installed = true; // бак №2 установлен и его настройки заполнены
+                    } else {
+                      $tank2_installed = false;
+                    }
+
+                    $sql = "select date_part('epoch',tstamp) epoch, dut[1] dut1, dut[2] dut2, dest, lat/600000::real as lat, lon/600000::real as lon, speed, dest, tstamp::date as tstamp, tstamp::timestamp without time zone as tstamp_all from data.gps where carid=$car and tstamp >= '$datefrom $timefrom' and tstamp <= '$dateto $timeto' and lat>0 and lon>0 order by epoch";
+                    $res = pg_query($sql);
+
+                    $speed_average = 0; // средняя скорость
+                    $speed_max = 0; // максимальная скорость
+                    $speed_count = 0; // количество треков скорости для определения средней скорости
+
+                    $move_time = 0; // время движения
+                    $stop_time = 0; // время стоянки
+
+                    $distance = 0; // пройденное расстояние
+                    $epoch_prev = false; // время предыдущего трека
+
+                    $dut1_fills = array();
+                    $dut1_fills_count = 0; // количество заправок
+                    // $dut2_arr = array();
+                    $dut1_liter_prev = false;
+                    // $dut2_liter_prev = false;
+                    $filling_start = false; // флаг начала заправки
+                    $dut1_liter_filling_start = 0; // объем бака на момент начала заправки
+
+                    while ($track = pg_fetch_array($res)) {
+                        extract($track, EXTR_OVERWRITE);
+                        if ($speed > 0) {
+                            if ($speed > $speed_max) {
+                                $speed_max = $speed; // определение максимальной скорости
+                            }
+                            $speed_count++;
+                            $speed_average += $speed; // определение средней скорости
+                            if ($epoch_prev) {
+                                $move_time += $epoch - $epoch_prev; // определение времени движения
+                            } 
+                        } else {
+                            if ($epoch_prev) {
+                                $stop_time += $epoch - $epoch_prev; // определение времени стоянки
+                            } 
+                        }
+                        if ($speed>5)$distance += $dest; // определение пройденного расстояния
+                        $epoch_prev = $epoch;
+
+                        // определение количества и объема заправок
+                        if ($tank1_installed && $dut1 >= $dut1_min && $dut1 <= $dut1_max) { // если значения частоты валидны и ДУТ установлен
+                            $dut1_herz_percent = ($dut1 - $dut1_min) * 100 / ($dut1_max - $dut1_min); // процент от общего количества герц
+                            $dut1_liter = intval($dut1_herz_percent * $dut1_litr / 100); // текущий показатель расхода топлива в литрах
+                            if ($dut1_liter_prev && $dut1_liter > $dut1_liter_prev && $speed < 5 && $dut1_liter - $dut1_liter_prev > 5) { // если текущий показатель расхода топлива больше предыдущего
+                                if (!$filling_start) {
+                                    $dut1_liter_filling_start = $dut1_liter_prev;
+                                }
+                                $filling_start = true; // начало заправки
+                            } else { 
+                                if ($filling_start) { // если происходила заправка
+                                    if ($dut1_liter - $dut1_liter_filling_start > 20) { // если объем заправки превысил 20 литров
+                                        $dut1_fills_count++;
+                                        // $c = count($dut1_fills);
+                                        // $dut1_fills[$c]['num'] = $dut1_liter_prev - $dut1_liter_filling_start;
+                                        // $dut1_fills[$c]['lat'] = $lat;
+                                        // $dut1_fills[$c]['lon'] = $lon;
+                                        // $reverse_geo = file_get_contents("http://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lon&sensor=false&language=ru");
+                                        // $reverse_geo = json_decode($reverse_geo, true);
+                                        // $dut1_fills[$c]['place'] = $reverse_geo[results][0][formatted_address];
+                                    }
+                                    $filling_start = false;
+                                }
+                            }
+                            $dut1_liter_prev = $dut1_liter;
+                        }
+                    }
+                    $speed_average = round($speed_average / $speed_count, 2);
+
+                    // пересчет секунд в часы и минуты
+                    $h = floor($move_time / 3600);
+                    $m = floor(($move_time - $h * 3600) / 60);
+                    $move_time = ($h > 0 ? $m > 0 ? "$h&nbsp;ч.&nbsp;$m&nbsp;мин." : "$h&nbsp;ч." : "$m&nbsp;мин.");        
+
+                    // пересчет секунд в часы и минуты
+                    $h = floor($stop_time / 3600);
+                    $m = floor(($stop_time - $h * 3600) / 60);
+                    $stop_time = ($h > 0 ? $m > 0 ? "$h&nbsp;ч.&nbsp;$m&nbsp;мин." : "$h&nbsp;ч." : "$m&nbsp;мин.");        
+                    
+                    $distance = round($distance / 1000, 3);
+
+                    echo "<tr>";
+                    echo     "<td>$row</td>";
+                    echo     "<td>$name</td>";
+                    echo     "<td>$gosnum</td>";
+                    echo     "<td>$move_time</td>";
+                    echo     "<td>$stop_time</td>";
+                    echo     "<td>$speed_average</td>";
+                    echo     "<td>$speed_max</td>";
+                    echo     "<td>$distance</td>";
+                    if (!$tank1_installed || !$tank2_installed) {
+                        echo "<td>Нет настроек по ДУТам</td>";
+                        // echo "<td>Нет настроек по ДУТам</td><td>&nbsp;</td><td>&nbsp;</td>";
+                    } elseif ($dut1_fills_count > 0) {
+                    // } elseif (count($dut1_fills) > 0) {
+                        // $fills_places = '';
+                        // $fills_nums = '';
+                        // foreach ($dut1_fills as $i=>$fill) {
+                            // $fills_places = $fills_places.($i > 0 ? '<br />' : '').'&#8226;&nbsp;'.$fill['place'];
+                            // $fills_nums = $fills_nums.($i > 0 ? '<br />' : '').'&#8226;&nbsp;'.$fill['num'];
+                        // }
+                        echo "<td>".$dut1_fills_count."</td>";
+                        // echo "<td>".count($dut1_fills)."</td>";
+                        // echo "<td>$fills_places</td>";
+                        // echo "<td>$fills_nums</td>";
+                    } else { // не было ни одной заправки
+                        echo "<td>0</td>";
+                        // echo "<td>0</td><td>&nbsp;</td><td>&nbsp;</td>";
+                    }
+                    echo "</tr>";
+                    $row++;
+                }
+            ?>
+        </tbody>
+    </table>
+</body>

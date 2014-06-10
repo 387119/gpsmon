@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Datepicker - Default functionality</title>
+
+	<link rel="stylesheet" href="../../themes/redmond/jquery.ui.all.css">
+	<script src="../../jquery-1.7.2.js"></script>
+	<script src="../../ui/jquery.ui.core.js"></script>
+	<script src="../../ui/jquery.ui.widget.js"></script>
+	<script src="../../ui/jquery.ui.datepicker.js"></script>
+	<script>
+	$(function() {
+		$( "#datefrom" ).datepicker();
+	});
+	</script>
+</head>
+<body>
+
+<div><table class=table1>
+<tr><td>Машины</td><td><button class=button1>Выбрать</button></td></tr>
+<tr class=odd><td>Тип отчёта</td><td><select name=typereport><option value=1>Сводный отчёт</option><option value=2>Отчёт по ДУТ</option><option value=3>Отчёт по стоянкам</option><option value=4>Средний расход топлива</option></select></td></tr>
+<tr><td>Формат отчёта</td><td><select name=formatreport><option value='html'>в html</option><option value='xls'>в xls</option></select></td></tr>
+<tr class=odd><td>Дата</td><td>с <input id=datefrom> по <input id=dateto></td></tr>
+</table></div>
+<div>
+<button class=button4>Загрузить отчёт</button>
+</div>
+
+
+</body>
+</html>
+
