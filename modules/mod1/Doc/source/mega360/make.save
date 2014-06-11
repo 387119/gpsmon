@@ -1,0 +1,2 @@
+#!/bin/sh
+gcc gg300.c -o gg300

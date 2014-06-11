@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#Written by Alexey Gylytskyy
+
+RETVAL=0
+PIDFILE=/var/run/mega-gps-v355.pid
+
+prog=mega-gps-v355
+exec=/usr/lib/gpsmod/mega-gps/mega-gps-3.55/$prog
+lockfile=/var/lock/subsys/$prog
+
+. /etc/rc.d/init.d/functions
+
+start() {
+        echo -n $"Starting mega-gps-v355: "
+        RETVAL=$?
+        daemon --pidfile="$PIDFILE" $exec
+        echo
+        [ $RETVAL -eq 0 ] && touch $lockfile
+        return $RETVAL
+}
+stop() {
+        echo -n $"Stopping mega-gps-v355: "
+        killproc -p "$PIDFILE" $exec
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f $lockfile
+        return $RETVAL
+}
+rhstatus() {
+        status -p "$PIDFILE" -l $prog $exec
+}
+restart() {
+        stop
+        start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        restart
+        ;;
+  status)
+        rhstatus
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|status}"
+        exit 3
+esac
+
+exit $?

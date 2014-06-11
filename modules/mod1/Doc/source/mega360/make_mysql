@@ -1,0 +1,2 @@
+#!/bin/sh
+gcc -I/usr/include/mysql -L/usr/lib/mysql gg300.c -o gg300 -lm -lmysqlclient

@@ -1,2 +1,5 @@
 v 0.0.0
-- Create
+- Create module gpsmon, which works with mega-gps equipment
+v 0.0.1
+- Added support working with Postresql
+- Module mega-gps saves data in json format(version 0.1.5)
