@@ -33,8 +33,8 @@
 				echo "<td>$time</td>";
 				
 				//$reverse_geo = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?latlng=48.33417333333333,38.40648333333333&sensor=false&language=ru');
-				$lat = $stop['lat']/600000;
-				$lon = $stop['lon']/600000;
+				$lat = $stop['lat'];
+				$lon = $stop['lon'];
 				$reverse_geo = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?latlng='.($lat).','.($lon).'&sensor=false&language=ru');
 				$reverse_geo = json_decode($reverse_geo, true);
 				echo "<td>{$reverse_geo[results][0][formatted_address]}</td>";
