@@ -2,12 +2,20 @@
 require_once "config.php";
 $usr=$_GET['u'];
 echo "
+<script>
+function menu_usercar_selectcar_cball(status) {
+ $(\".cb_selucar\").each( function() {
+   $(this).attr(\"checked\",status);
+   })
+   };
+   
+</script>
 <div id='atab' style='overflow:auto'>
  <form action='/admin/usercar_send.php' method=post id='usercarform'>
  <input type=hidden name=uid value='$usr'>
  <table>
     <thead>
-      <tr><th></th><th>№ машины</th><th>Название</th><th>Гос. номер</th></tr>
+      <tr><th><input type=checkbox onclick=\"menu_usercar_selectcar_cball(this.checked);\">Все</th><th>№ машины</th><th>Название</th><th>Гос. номер</th></tr>
     </thead>";
 
  $sql="select carid,name,gosnum,(select 1 from users_cars as uc where userid=$usr and uc.carid=c1.carid)::integer as inst from cars as c1 where clientid in (select clientid from users where userid = $usr) order by carid;";
@@ -15,7 +23,7 @@ echo "
   while ($resf=pg_fetch_array($res)){
    extract ($resf,EXTR_OVERWRITE);
     if ($inst==1)$sel="checked";else $sel="";
-    echo "<tr><td><input id=userscars[$carid] name=userscars[$carid] type=checkbox $sel></td><td>$carid</td><td>$name</td><td>$gosnum</td></tr>";
+    echo "<tr><td><input id=userscars[$carid] name=userscars[$carid] class='cb_selucar' type=checkbox $sel></td><td>$carid</td><td>$name</td><td>$gosnum</td></tr>";
   }
 echo"</table></form></div>";
 echo "<button id=newcar onclick=\"usercar_send($usr);\">Сохранить</button>";
