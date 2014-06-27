@@ -1,0 +1,4 @@
+v0.1.6 (06.07.2014)
+ - переименована группа voltage в power
+ - расширен показатель sensors->power->external(internal)->extX(intX) дабавлен volt и percent
+
