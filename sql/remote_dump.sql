@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.3.4
 -- Dumped by pg_dump version 9.3.2
--- Started on 2014-06-23 11:25:22 EEST
+-- Started on 2014-06-27 15:21:03 EEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -24,12 +24,31 @@ CREATE SCHEMA accounts;
 ALTER SCHEMA accounts OWNER TO gpsmon;
 
 --
--- TOC entry 4731 (class 0 OID 0)
+-- TOC entry 4763 (class 0 OID 0)
 -- Dependencies: 33
 -- Name: SCHEMA accounts; Type: COMMENT; Schema: -; Owner: gpsmon
 --
 
 COMMENT ON SCHEMA accounts IS 'объекты мониторинга и их настройки ';
+
+
+--
+-- TOC entry 459 (class 2615 OID 1867135)
+-- Name: cfg; Type: SCHEMA; Schema: -; Owner: gpsmon
+--
+
+CREATE SCHEMA cfg;
+
+
+ALTER SCHEMA cfg OWNER TO gpsmon;
+
+--
+-- TOC entry 4764 (class 0 OID 0)
+-- Dependencies: 459
+-- Name: SCHEMA cfg; Type: COMMENT; Schema: -; Owner: gpsmon
+--
+
+COMMENT ON SCHEMA cfg IS 'конфигурации, настройки, параметры';
 
 
 --
@@ -43,7 +62,7 @@ CREATE SCHEMA data;
 ALTER SCHEMA data OWNER TO gpsmon;
 
 --
--- TOC entry 4732 (class 0 OID 0)
+-- TOC entry 4765 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: SCHEMA data; Type: COMMENT; Schema: -; Owner: gpsmon
 --
@@ -62,7 +81,7 @@ CREATE SCHEMA gis;
 ALTER SCHEMA gis OWNER TO gpsmon;
 
 --
--- TOC entry 4733 (class 0 OID 0)
+-- TOC entry 4766 (class 0 OID 0)
 -- Dependencies: 34
 -- Name: SCHEMA gis; Type: COMMENT; Schema: -; Owner: gpsmon
 --
@@ -81,7 +100,7 @@ CREATE SCHEMA log;
 ALTER SCHEMA log OWNER TO postgres;
 
 --
--- TOC entry 4734 (class 0 OID 0)
+-- TOC entry 4767 (class 0 OID 0)
 -- Dependencies: 452
 -- Name: SCHEMA log; Type: COMMENT; Schema: -; Owner: postgres
 --
@@ -100,7 +119,7 @@ CREATE SCHEMA map;
 ALTER SCHEMA map OWNER TO gpsmon;
 
 --
--- TOC entry 4735 (class 0 OID 0)
+-- TOC entry 4768 (class 0 OID 0)
 -- Dependencies: 35
 -- Name: SCHEMA map; Type: COMMENT; Schema: -; Owner: gpsmon
 --
@@ -119,7 +138,7 @@ CREATE SCHEMA olap;
 ALTER SCHEMA olap OWNER TO gpsmon;
 
 --
--- TOC entry 4736 (class 0 OID 0)
+-- TOC entry 4769 (class 0 OID 0)
 -- Dependencies: 7
 -- Name: SCHEMA olap; Type: COMMENT; Schema: -; Owner: gpsmon
 --
@@ -128,7 +147,7 @@ COMMENT ON SCHEMA olap IS 'посчитанные периоды';
 
 
 --
--- TOC entry 674 (class 3079 OID 12617)
+-- TOC entry 681 (class 3079 OID 12617)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -136,8 +155,8 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 4739 (class 0 OID 0)
--- Dependencies: 674
+-- TOC entry 4772 (class 0 OID 0)
+-- Dependencies: 681
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -145,7 +164,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- TOC entry 675 (class 3079 OID 372729)
+-- TOC entry 682 (class 3079 OID 372729)
 -- Name: postgis; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -153,8 +172,8 @@ CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA gis;
 
 
 --
--- TOC entry 4740 (class 0 OID 0)
--- Dependencies: 675
+-- TOC entry 4773 (class 0 OID 0)
+-- Dependencies: 682
 -- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -164,7 +183,7 @@ COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial
 SET search_path = data, pg_catalog;
 
 --
--- TOC entry 694 (class 1255 OID 332728)
+-- TOC entry 701 (class 1255 OID 332728)
 -- Name: gm_data_arh2fs(); Type: FUNCTION; Schema: data; Owner: postgres
 --
 
@@ -201,7 +220,7 @@ $$;
 ALTER FUNCTION data.gm_data_arh2fs() OWNER TO postgres;
 
 --
--- TOC entry 695 (class 1255 OID 339361)
+-- TOC entry 702 (class 1255 OID 339361)
 -- Name: gm_data_gps2arh(); Type: FUNCTION; Schema: data; Owner: postgres
 --
 
@@ -226,7 +245,7 @@ $$;
 ALTER FUNCTION data.gm_data_gps2arh() OWNER TO postgres;
 
 --
--- TOC entry 751 (class 1255 OID 305941)
+-- TOC entry 758 (class 1255 OID 305941)
 -- Name: gps_from_trackers(); Type: FUNCTION; Schema: data; Owner: postgres
 --
 
@@ -319,7 +338,7 @@ $$;
 ALTER FUNCTION data.gps_from_trackers() OWNER TO postgres;
 
 --
--- TOC entry 701 (class 1255 OID 998943)
+-- TOC entry 708 (class 1255 OID 998943)
 -- Name: mod1_online_update_10(); Type: FUNCTION; Schema: data; Owner: gpsmon
 --
 
@@ -392,7 +411,7 @@ $$;
 ALTER FUNCTION data.mod1_online_update_10() OWNER TO gpsmon;
 
 --
--- TOC entry 699 (class 1255 OID 1007230)
+-- TOC entry 706 (class 1255 OID 1007230)
 -- Name: online_update(); Type: FUNCTION; Schema: data; Owner: gpsmon
 --
 
@@ -409,8 +428,8 @@ $$;
 ALTER FUNCTION data.online_update() OWNER TO gpsmon;
 
 --
--- TOC entry 4741 (class 0 OID 0)
--- Dependencies: 699
+-- TOC entry 4774 (class 0 OID 0)
+-- Dependencies: 706
 -- Name: FUNCTION online_update(); Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -418,7 +437,7 @@ COMMENT ON FUNCTION online_update() IS 'обновление онлайн дан
 
 
 --
--- TOC entry 697 (class 1255 OID 1006629)
+-- TOC entry 704 (class 1255 OID 1006629)
 -- Name: trackers_parse(); Type: FUNCTION; Schema: data; Owner: gpsmon
 --
 
@@ -439,8 +458,8 @@ $$;
 ALTER FUNCTION data.trackers_parse() OWNER TO gpsmon;
 
 --
--- TOC entry 4742 (class 0 OID 0)
--- Dependencies: 697
+-- TOC entry 4775 (class 0 OID 0)
+-- Dependencies: 704
 -- Name: FUNCTION trackers_parse(); Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -450,7 +469,7 @@ COMMENT ON FUNCTION trackers_parse() IS 'консолидированная фу
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 689 (class 1255 OID 17978)
+-- TOC entry 696 (class 1255 OID 17978)
 -- Name: first_agg(anyelement, anyelement); Type: FUNCTION; Schema: public; Owner: gpsmon
 --
 
@@ -464,7 +483,7 @@ $_$;
 ALTER FUNCTION public.first_agg(anyelement, anyelement) OWNER TO gpsmon;
 
 --
--- TOC entry 691 (class 1255 OID 327867)
+-- TOC entry 698 (class 1255 OID 327867)
 -- Name: gm_dest(real, real, real, real); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -490,7 +509,7 @@ $$;
 ALTER FUNCTION public.gm_dest(lat1 real, lon1 real, lat2 real, lon2 real) OWNER TO postgres;
 
 --
--- TOC entry 690 (class 1255 OID 17979)
+-- TOC entry 697 (class 1255 OID 17979)
 -- Name: last_agg(anyelement, anyelement); Type: FUNCTION; Schema: public; Owner: gpsmon
 --
 
@@ -504,7 +523,7 @@ $_$;
 ALTER FUNCTION public.last_agg(anyelement, anyelement) OWNER TO gpsmon;
 
 --
--- TOC entry 692 (class 1255 OID 972936)
+-- TOC entry 699 (class 1255 OID 972936)
 -- Name: ussd_setsend(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -524,7 +543,7 @@ $$;
 ALTER FUNCTION public.ussd_setsend(i_ussdid integer) OWNER TO postgres;
 
 --
--- TOC entry 2276 (class 1255 OID 17980)
+-- TOC entry 2299 (class 1255 OID 17980)
 -- Name: first(anyelement); Type: AGGREGATE; Schema: public; Owner: gpsmon
 --
 
@@ -537,7 +556,7 @@ CREATE AGGREGATE first(anyelement) (
 ALTER AGGREGATE public.first(anyelement) OWNER TO gpsmon;
 
 --
--- TOC entry 2277 (class 1255 OID 17981)
+-- TOC entry 2300 (class 1255 OID 17981)
 -- Name: last(anyelement); Type: AGGREGATE; Schema: public; Owner: gpsmon
 --
 
@@ -549,14 +568,138 @@ CREATE AGGREGATE last(anyelement) (
 
 ALTER AGGREGATE public.last(anyelement) OWNER TO gpsmon;
 
-SET search_path = data, pg_catalog;
+SET search_path = cfg, pg_catalog;
 
-SET default_tablespace = gpsdata;
+SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- TOC entry 642 (class 1259 OID 18092)
+-- TOC entry 678 (class 1259 OID 1867286)
+-- Name: icon; Type: TABLE; Schema: cfg; Owner: gpsmon; Tablespace: 
+--
+
+CREATE TABLE icon (
+    iconid integer NOT NULL,
+    groupid integer,
+    iconname character varying
+);
+
+
+ALTER TABLE cfg.icon OWNER TO gpsmon;
+
+--
+-- TOC entry 676 (class 1259 OID 1867193)
+-- Name: icon_group; Type: TABLE; Schema: cfg; Owner: gpsmon; Tablespace: 
+--
+
+CREATE TABLE icon_group (
+    groupid integer NOT NULL,
+    groupname character varying,
+    iconname character varying,
+    sortnum integer,
+    active boolean
+);
+
+
+ALTER TABLE cfg.icon_group OWNER TO gpsmon;
+
+--
+-- TOC entry 4776 (class 0 OID 0)
+-- Dependencies: 676
+-- Name: TABLE icon_group; Type: COMMENT; Schema: cfg; Owner: gpsmon
+--
+
+COMMENT ON TABLE icon_group IS 'группы иконок';
+
+
+--
+-- TOC entry 675 (class 1259 OID 1867191)
+-- Name: icon_group_groupid_seq; Type: SEQUENCE; Schema: cfg; Owner: gpsmon
+--
+
+CREATE SEQUENCE icon_group_groupid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cfg.icon_group_groupid_seq OWNER TO gpsmon;
+
+--
+-- TOC entry 4777 (class 0 OID 0)
+-- Dependencies: 675
+-- Name: icon_group_groupid_seq; Type: SEQUENCE OWNED BY; Schema: cfg; Owner: gpsmon
+--
+
+ALTER SEQUENCE icon_group_groupid_seq OWNED BY icon_group.groupid;
+
+
+--
+-- TOC entry 677 (class 1259 OID 1867284)
+-- Name: icon_iconid_seq; Type: SEQUENCE; Schema: cfg; Owner: gpsmon
+--
+
+CREATE SEQUENCE icon_iconid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cfg.icon_iconid_seq OWNER TO gpsmon;
+
+--
+-- TOC entry 4778 (class 0 OID 0)
+-- Dependencies: 677
+-- Name: icon_iconid_seq; Type: SEQUENCE OWNED BY; Schema: cfg; Owner: gpsmon
+--
+
+ALTER SEQUENCE icon_iconid_seq OWNED BY icon.iconid;
+
+
+--
+-- TOC entry 679 (class 1259 OID 1867685)
+-- Name: vicon; Type: VIEW; Schema: cfg; Owner: gpsmon
+--
+
+CREATE VIEW vicon AS
+ SELECT t1.iconid,
+    t1.groupid,
+    t1.iconname
+   FROM (icon t1
+   LEFT JOIN icon_group t2 USING (groupid))
+  WHERE (t2.active = true)
+  ORDER BY t1.groupid, t1.iconid;
+
+
+ALTER TABLE cfg.vicon OWNER TO gpsmon;
+
+--
+-- TOC entry 680 (class 1259 OID 1867717)
+-- Name: vicon_group; Type: VIEW; Schema: cfg; Owner: gpsmon
+--
+
+CREATE VIEW vicon_group AS
+ SELECT icon_group.groupid,
+    icon_group.groupname,
+    icon_group.iconname
+   FROM icon_group
+  WHERE (icon_group.active = true)
+  ORDER BY icon_group.sortnum;
+
+
+ALTER TABLE cfg.vicon_group OWNER TO gpsmon;
+
+SET search_path = data, pg_catalog;
+
+SET default_tablespace = gpsdata;
+
+--
+-- TOC entry 643 (class 1259 OID 18092)
 -- Name: gps; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: gpsdata
 --
 
@@ -582,7 +725,7 @@ ALTER TABLE data.gps OWNER TO gpsmon;
 SET default_tablespace = gpsdataarh;
 
 --
--- TOC entry 644 (class 1259 OID 53453)
+-- TOC entry 645 (class 1259 OID 53453)
 -- Name: gps_arh; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: gpsdataarh
 --
 
@@ -608,7 +751,7 @@ ALTER TABLE data.gps_arh OWNER TO gpsmon;
 SET default_tablespace = '';
 
 --
--- TOC entry 622 (class 1259 OID 17982)
+-- TOC entry 623 (class 1259 OID 17982)
 -- Name: gps_from_trackers; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -631,7 +774,7 @@ CREATE TABLE gps_from_trackers (
 ALTER TABLE data.gps_from_trackers OWNER TO gpsmon;
 
 --
--- TOC entry 623 (class 1259 OID 17988)
+-- TOC entry 624 (class 1259 OID 17988)
 -- Name: imei_not_db; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -644,7 +787,7 @@ CREATE TABLE imei_not_db (
 ALTER TABLE data.imei_not_db OWNER TO gpsmon;
 
 --
--- TOC entry 673 (class 1259 OID 1705654)
+-- TOC entry 674 (class 1259 OID 1705654)
 -- Name: location; Type: TABLE; Schema: data; Owner: postgres; Tablespace: 
 --
 
@@ -661,8 +804,8 @@ CREATE TABLE location (
 ALTER TABLE data.location OWNER TO postgres;
 
 --
--- TOC entry 4743 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4779 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: TABLE location; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -670,8 +813,8 @@ COMMENT ON TABLE location IS 'пройденные прямые отрезки �
 
 
 --
--- TOC entry 4744 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4780 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: COLUMN location.locationid; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -679,8 +822,8 @@ COMMENT ON COLUMN location.locationid IS 'id отрезка';
 
 
 --
--- TOC entry 4745 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4781 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: COLUMN location.objectid; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -688,8 +831,8 @@ COMMENT ON COLUMN location.objectid IS 'id объекта мониторинга
 
 
 --
--- TOC entry 4746 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4782 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: COLUMN location.fromid; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -697,8 +840,8 @@ COMMENT ON COLUMN location.fromid IS 'id устройства с которог�
 
 
 --
--- TOC entry 4747 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4783 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: COLUMN location.tstamp_begin; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -706,8 +849,8 @@ COMMENT ON COLUMN location.tstamp_begin IS 'время начала отрезк
 
 
 --
--- TOC entry 4748 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4784 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: COLUMN location.tstamp_end; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -715,8 +858,8 @@ COMMENT ON COLUMN location.tstamp_end IS 'всера конца отрезка';
 
 
 --
--- TOC entry 4749 (class 0 OID 0)
--- Dependencies: 673
+-- TOC entry 4785 (class 0 OID 0)
+-- Dependencies: 674
 -- Name: COLUMN location.location; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -726,7 +869,7 @@ point - стоянка';
 
 
 --
--- TOC entry 672 (class 1259 OID 1705652)
+-- TOC entry 673 (class 1259 OID 1705652)
 -- Name: location_locationid_seq; Type: SEQUENCE; Schema: data; Owner: postgres
 --
 
@@ -741,8 +884,8 @@ CREATE SEQUENCE location_locationid_seq
 ALTER TABLE data.location_locationid_seq OWNER TO postgres;
 
 --
--- TOC entry 4750 (class 0 OID 0)
--- Dependencies: 672
+-- TOC entry 4786 (class 0 OID 0)
+-- Dependencies: 673
 -- Name: location_locationid_seq; Type: SEQUENCE OWNED BY; Schema: data; Owner: postgres
 --
 
@@ -750,7 +893,7 @@ ALTER SEQUENCE location_locationid_seq OWNED BY location.locationid;
 
 
 --
--- TOC entry 624 (class 1259 OID 17994)
+-- TOC entry 625 (class 1259 OID 17994)
 -- Name: online; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -779,7 +922,7 @@ ALTER TABLE data.online OWNER TO gpsmon;
 SET default_tablespace = gpsdata;
 
 --
--- TOC entry 646 (class 1259 OID 354684)
+-- TOC entry 647 (class 1259 OID 354684)
 -- Name: trackers; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: gpsdata
 --
 
@@ -794,8 +937,8 @@ CREATE TABLE trackers (
 ALTER TABLE data.trackers OWNER TO gpsmon;
 
 --
--- TOC entry 4751 (class 0 OID 0)
--- Dependencies: 646
+-- TOC entry 4787 (class 0 OID 0)
+-- Dependencies: 647
 -- Name: TABLE trackers; Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -803,8 +946,8 @@ COMMENT ON TABLE trackers IS 'json данные от трекеров';
 
 
 --
--- TOC entry 4752 (class 0 OID 0)
--- Dependencies: 646
+-- TOC entry 4788 (class 0 OID 0)
+-- Dependencies: 647
 -- Name: COLUMN trackers.id; Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -812,8 +955,8 @@ COMMENT ON COLUMN trackers.id IS 'порядковый номер';
 
 
 --
--- TOC entry 4753 (class 0 OID 0)
--- Dependencies: 646
+-- TOC entry 4789 (class 0 OID 0)
+-- Dependencies: 647
 -- Name: COLUMN trackers.tstampdb; Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -821,8 +964,8 @@ COMMENT ON COLUMN trackers.tstampdb IS 'время записи данных в 
 
 
 --
--- TOC entry 4754 (class 0 OID 0)
--- Dependencies: 646
+-- TOC entry 4790 (class 0 OID 0)
+-- Dependencies: 647
 -- Name: COLUMN trackers.json_data; Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -830,7 +973,7 @@ COMMENT ON COLUMN trackers.json_data IS 'данные ';
 
 
 --
--- TOC entry 645 (class 1259 OID 354682)
+-- TOC entry 646 (class 1259 OID 354682)
 -- Name: trackers_id_seq; Type: SEQUENCE; Schema: data; Owner: gpsmon
 --
 
@@ -845,8 +988,8 @@ CREATE SEQUENCE trackers_id_seq
 ALTER TABLE data.trackers_id_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4755 (class 0 OID 0)
--- Dependencies: 645
+-- TOC entry 4791 (class 0 OID 0)
+-- Dependencies: 646
 -- Name: trackers_id_seq; Type: SEQUENCE OWNED BY; Schema: data; Owner: gpsmon
 --
 
@@ -856,7 +999,7 @@ ALTER SEQUENCE trackers_id_seq OWNED BY trackers.id;
 SET default_tablespace = '';
 
 --
--- TOC entry 667 (class 1259 OID 972459)
+-- TOC entry 668 (class 1259 OID 972459)
 -- Name: ussd; Type: TABLE; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -873,8 +1016,8 @@ CREATE TABLE ussd (
 ALTER TABLE data.ussd OWNER TO gpsmon;
 
 --
--- TOC entry 4756 (class 0 OID 0)
--- Dependencies: 667
+-- TOC entry 4792 (class 0 OID 0)
+-- Dependencies: 668
 -- Name: COLUMN ussd.status; Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -887,8 +1030,8 @@ COMMENT ON COLUMN ussd.status IS '0 - необходимо отправить
 
 
 --
--- TOC entry 4757 (class 0 OID 0)
--- Dependencies: 667
+-- TOC entry 4793 (class 0 OID 0)
+-- Dependencies: 668
 -- Name: COLUMN ussd.ussd_text; Type: COMMENT; Schema: data; Owner: gpsmon
 --
 
@@ -896,7 +1039,7 @@ COMMENT ON COLUMN ussd.ussd_text IS 'сам текст ussd запроса';
 
 
 --
--- TOC entry 666 (class 1259 OID 972457)
+-- TOC entry 667 (class 1259 OID 972457)
 -- Name: ussd_ussdid_seq; Type: SEQUENCE; Schema: data; Owner: gpsmon
 --
 
@@ -911,8 +1054,8 @@ CREATE SEQUENCE ussd_ussdid_seq
 ALTER TABLE data.ussd_ussdid_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4758 (class 0 OID 0)
--- Dependencies: 666
+-- TOC entry 4794 (class 0 OID 0)
+-- Dependencies: 667
 -- Name: ussd_ussdid_seq; Type: SEQUENCE OWNED BY; Schema: data; Owner: gpsmon
 --
 
@@ -920,7 +1063,7 @@ ALTER SEQUENCE ussd_ussdid_seq OWNED BY ussd.ussdid;
 
 
 --
--- TOC entry 662 (class 1259 OID 788813)
+-- TOC entry 663 (class 1259 OID 788813)
 -- Name: vtrackers_h_v010; Type: VIEW; Schema: data; Owner: postgres
 --
 
@@ -960,8 +1103,8 @@ CREATE VIEW vtrackers_h_v010 AS
 ALTER TABLE data.vtrackers_h_v010 OWNER TO postgres;
 
 --
--- TOC entry 4759 (class 0 OID 0)
--- Dependencies: 662
+-- TOC entry 4795 (class 0 OID 0)
+-- Dependencies: 663
 -- Name: VIEW vtrackers_h_v010; Type: COMMENT; Schema: data; Owner: postgres
 --
 
@@ -969,7 +1112,7 @@ COMMENT ON VIEW vtrackers_h_v010 IS 'парсинг входящей инфор�
 
 
 --
--- TOC entry 663 (class 1259 OID 789781)
+-- TOC entry 664 (class 1259 OID 789781)
 -- Name: vtrackers_h_v012; Type: VIEW; Schema: data; Owner: gpsmon
 --
 
@@ -1009,7 +1152,7 @@ CREATE VIEW vtrackers_h_v012 AS
 ALTER TABLE data.vtrackers_h_v012 OWNER TO gpsmon;
 
 --
--- TOC entry 664 (class 1259 OID 971153)
+-- TOC entry 665 (class 1259 OID 971153)
 -- Name: vtrackers_h_v013; Type: VIEW; Schema: data; Owner: gpsmon
 --
 
@@ -1054,7 +1197,7 @@ CREATE VIEW vtrackers_h_v013 AS
 ALTER TABLE data.vtrackers_h_v013 OWNER TO gpsmon;
 
 --
--- TOC entry 665 (class 1259 OID 972276)
+-- TOC entry 666 (class 1259 OID 972276)
 -- Name: vtrackers_h_v014; Type: VIEW; Schema: data; Owner: gpsmon
 --
 
@@ -1101,7 +1244,7 @@ CREATE VIEW vtrackers_h_v014 AS
 ALTER TABLE data.vtrackers_h_v014 OWNER TO gpsmon;
 
 --
--- TOC entry 670 (class 1259 OID 1080874)
+-- TOC entry 671 (class 1259 OID 1080874)
 -- Name: vtrackers_h_v015; Type: VIEW; Schema: data; Owner: gpsmon
 --
 
@@ -1152,7 +1295,7 @@ ALTER TABLE data.vtrackers_h_v015 OWNER TO gpsmon;
 SET search_path = log, pg_catalog;
 
 --
--- TOC entry 668 (class 1259 OID 972554)
+-- TOC entry 669 (class 1259 OID 972554)
 -- Name: ussd_status; Type: TABLE; Schema: log; Owner: gpsmon; Tablespace: 
 --
 
@@ -1166,8 +1309,8 @@ CREATE TABLE ussd_status (
 ALTER TABLE log.ussd_status OWNER TO gpsmon;
 
 --
--- TOC entry 4760 (class 0 OID 0)
--- Dependencies: 668
+-- TOC entry 4796 (class 0 OID 0)
+-- Dependencies: 669
 -- Name: TABLE ussd_status; Type: COMMENT; Schema: log; Owner: gpsmon
 --
 
@@ -1175,8 +1318,8 @@ COMMENT ON TABLE ussd_status IS 'изменение статусов ussd зап
 
 
 --
--- TOC entry 4761 (class 0 OID 0)
--- Dependencies: 668
+-- TOC entry 4797 (class 0 OID 0)
+-- Dependencies: 669
 -- Name: COLUMN ussd_status.ussdid; Type: COMMENT; Schema: log; Owner: gpsmon
 --
 
@@ -1184,8 +1327,8 @@ COMMENT ON COLUMN ussd_status.ussdid IS 'номер ussd запроса';
 
 
 --
--- TOC entry 4762 (class 0 OID 0)
--- Dependencies: 668
+-- TOC entry 4798 (class 0 OID 0)
+-- Dependencies: 669
 -- Name: COLUMN ussd_status.tstamp; Type: COMMENT; Schema: log; Owner: gpsmon
 --
 
@@ -1193,8 +1336,8 @@ COMMENT ON COLUMN ussd_status.tstamp IS 'время изменения';
 
 
 --
--- TOC entry 4763 (class 0 OID 0)
--- Dependencies: 668
+-- TOC entry 4799 (class 0 OID 0)
+-- Dependencies: 669
 -- Name: COLUMN ussd_status.status; Type: COMMENT; Schema: log; Owner: gpsmon
 --
 
@@ -1204,7 +1347,7 @@ COMMENT ON COLUMN ussd_status.status IS 'новый статус';
 SET search_path = olap, pg_catalog;
 
 --
--- TOC entry 625 (class 1259 OID 18004)
+-- TOC entry 626 (class 1259 OID 18004)
 -- Name: gps_average_day; Type: TABLE; Schema: olap; Owner: gpsmon; Tablespace: 
 --
 
@@ -1230,7 +1373,7 @@ ALTER TABLE olap.gps_average_day OWNER TO gpsmon;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 626 (class 1259 OID 18007)
+-- TOC entry 627 (class 1259 OID 18007)
 -- Name: cars; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1253,7 +1396,7 @@ CREATE TABLE cars (
 ALTER TABLE public.cars OWNER TO gpsmon;
 
 --
--- TOC entry 627 (class 1259 OID 18014)
+-- TOC entry 628 (class 1259 OID 18014)
 -- Name: cars_carsid_seq; Type: SEQUENCE; Schema: public; Owner: gpsmon
 --
 
@@ -1268,8 +1411,8 @@ CREATE SEQUENCE cars_carsid_seq
 ALTER TABLE public.cars_carsid_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4764 (class 0 OID 0)
--- Dependencies: 627
+-- TOC entry 4800 (class 0 OID 0)
+-- Dependencies: 628
 -- Name: cars_carsid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: gpsmon
 --
 
@@ -1277,7 +1420,7 @@ ALTER SEQUENCE cars_carsid_seq OWNED BY cars.carid;
 
 
 --
--- TOC entry 628 (class 1259 OID 18016)
+-- TOC entry 629 (class 1259 OID 18016)
 -- Name: clients; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1294,7 +1437,7 @@ CREATE TABLE clients (
 ALTER TABLE public.clients OWNER TO gpsmon;
 
 --
--- TOC entry 629 (class 1259 OID 18022)
+-- TOC entry 630 (class 1259 OID 18022)
 -- Name: clients_clientid_seq; Type: SEQUENCE; Schema: public; Owner: gpsmon
 --
 
@@ -1309,8 +1452,8 @@ CREATE SEQUENCE clients_clientid_seq
 ALTER TABLE public.clients_clientid_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4765 (class 0 OID 0)
--- Dependencies: 629
+-- TOC entry 4801 (class 0 OID 0)
+-- Dependencies: 630
 -- Name: clients_clientid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: gpsmon
 --
 
@@ -1318,7 +1461,7 @@ ALTER SEQUENCE clients_clientid_seq OWNED BY clients.clientid;
 
 
 --
--- TOC entry 630 (class 1259 OID 18024)
+-- TOC entry 631 (class 1259 OID 18024)
 -- Name: geozones; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1337,7 +1480,7 @@ CREATE TABLE geozones (
 ALTER TABLE public.geozones OWNER TO gpsmon;
 
 --
--- TOC entry 631 (class 1259 OID 18030)
+-- TOC entry 632 (class 1259 OID 18030)
 -- Name: geozone_id_seq; Type: SEQUENCE; Schema: public; Owner: gpsmon
 --
 
@@ -1352,8 +1495,8 @@ CREATE SEQUENCE geozone_id_seq
 ALTER TABLE public.geozone_id_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4766 (class 0 OID 0)
--- Dependencies: 631
+-- TOC entry 4802 (class 0 OID 0)
+-- Dependencies: 632
 -- Name: geozone_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: gpsmon
 --
 
@@ -1361,7 +1504,7 @@ ALTER SEQUENCE geozone_id_seq OWNED BY geozones.id;
 
 
 --
--- TOC entry 643 (class 1259 OID 18101)
+-- TOC entry 644 (class 1259 OID 18101)
 -- Name: gpsdatafull; Type: VIEW; Schema: public; Owner: gpsmon
 --
 
@@ -1385,8 +1528,8 @@ CREATE VIEW gpsdatafull AS
 ALTER TABLE public.gpsdatafull OWNER TO gpsmon;
 
 --
--- TOC entry 4767 (class 0 OID 0)
--- Dependencies: 643
+-- TOC entry 4803 (class 0 OID 0)
+-- Dependencies: 644
 -- Name: VIEW gpsdatafull; Type: COMMENT; Schema: public; Owner: gpsmon
 --
 
@@ -1394,7 +1537,7 @@ COMMENT ON VIEW gpsdatafull IS 'обработанные данные по об�
 
 
 --
--- TOC entry 632 (class 1259 OID 18032)
+-- TOC entry 633 (class 1259 OID 18032)
 -- Name: logs; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1409,7 +1552,7 @@ CREATE TABLE logs (
 ALTER TABLE public.logs OWNER TO gpsmon;
 
 --
--- TOC entry 633 (class 1259 OID 18039)
+-- TOC entry 634 (class 1259 OID 18039)
 -- Name: logs_logid_seq; Type: SEQUENCE; Schema: public; Owner: gpsmon
 --
 
@@ -1424,8 +1567,8 @@ CREATE SEQUENCE logs_logid_seq
 ALTER TABLE public.logs_logid_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4769 (class 0 OID 0)
--- Dependencies: 633
+-- TOC entry 4805 (class 0 OID 0)
+-- Dependencies: 634
 -- Name: logs_logid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: gpsmon
 --
 
@@ -1433,7 +1576,7 @@ ALTER SEQUENCE logs_logid_seq OWNED BY logs.logid;
 
 
 --
--- TOC entry 634 (class 1259 OID 18041)
+-- TOC entry 635 (class 1259 OID 18041)
 -- Name: phonecard; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1446,7 +1589,7 @@ CREATE TABLE phonecard (
 ALTER TABLE public.phonecard OWNER TO gpsmon;
 
 --
--- TOC entry 661 (class 1259 OID 590998)
+-- TOC entry 662 (class 1259 OID 590998)
 -- Name: reconfigure; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1461,7 +1604,7 @@ CREATE TABLE reconfigure (
 ALTER TABLE public.reconfigure OWNER TO gpsmon;
 
 --
--- TOC entry 635 (class 1259 OID 18047)
+-- TOC entry 636 (class 1259 OID 18047)
 -- Name: sessions; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1476,7 +1619,7 @@ CREATE TABLE sessions (
 ALTER TABLE public.sessions OWNER TO gpsmon;
 
 --
--- TOC entry 636 (class 1259 OID 18053)
+-- TOC entry 637 (class 1259 OID 18053)
 -- Name: settings; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1490,7 +1633,7 @@ CREATE TABLE settings (
 ALTER TABLE public.settings OWNER TO gpsmon;
 
 --
--- TOC entry 637 (class 1259 OID 18062)
+-- TOC entry 638 (class 1259 OID 18062)
 -- Name: trackers; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1508,7 +1651,7 @@ CREATE TABLE trackers (
 ALTER TABLE public.trackers OWNER TO gpsmon;
 
 --
--- TOC entry 638 (class 1259 OID 18068)
+-- TOC entry 639 (class 1259 OID 18068)
 -- Name: trackers_trackerid_seq; Type: SEQUENCE; Schema: public; Owner: gpsmon
 --
 
@@ -1523,8 +1666,8 @@ CREATE SEQUENCE trackers_trackerid_seq
 ALTER TABLE public.trackers_trackerid_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4770 (class 0 OID 0)
--- Dependencies: 638
+-- TOC entry 4806 (class 0 OID 0)
+-- Dependencies: 639
 -- Name: trackers_trackerid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: gpsmon
 --
 
@@ -1532,7 +1675,7 @@ ALTER SEQUENCE trackers_trackerid_seq OWNED BY trackers.trackerid;
 
 
 --
--- TOC entry 639 (class 1259 OID 18070)
+-- TOC entry 640 (class 1259 OID 18070)
 -- Name: users; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1556,7 +1699,7 @@ CREATE TABLE users (
 ALTER TABLE public.users OWNER TO gpsmon;
 
 --
--- TOC entry 640 (class 1259 OID 18079)
+-- TOC entry 641 (class 1259 OID 18079)
 -- Name: users_cars; Type: TABLE; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1569,7 +1712,7 @@ CREATE TABLE users_cars (
 ALTER TABLE public.users_cars OWNER TO gpsmon;
 
 --
--- TOC entry 641 (class 1259 OID 18082)
+-- TOC entry 642 (class 1259 OID 18082)
 -- Name: users_userid_seq; Type: SEQUENCE; Schema: public; Owner: gpsmon
 --
 
@@ -1584,8 +1727,8 @@ CREATE SEQUENCE users_userid_seq
 ALTER TABLE public.users_userid_seq OWNER TO gpsmon;
 
 --
--- TOC entry 4771 (class 0 OID 0)
--- Dependencies: 641
+-- TOC entry 4807 (class 0 OID 0)
+-- Dependencies: 642
 -- Name: users_userid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: gpsmon
 --
 
@@ -1593,7 +1736,7 @@ ALTER SEQUENCE users_userid_seq OWNED BY users.userid;
 
 
 --
--- TOC entry 669 (class 1259 OID 972713)
+-- TOC entry 670 (class 1259 OID 972713)
 -- Name: ussd_forsend; Type: VIEW; Schema: public; Owner: gpsmon
 --
 
@@ -1611,8 +1754,8 @@ CREATE VIEW ussd_forsend AS
 ALTER TABLE public.ussd_forsend OWNER TO gpsmon;
 
 --
--- TOC entry 4772 (class 0 OID 0)
--- Dependencies: 669
+-- TOC entry 4808 (class 0 OID 0)
+-- Dependencies: 670
 -- Name: VIEW ussd_forsend; Type: COMMENT; Schema: public; Owner: gpsmon
 --
 
@@ -1620,7 +1763,7 @@ COMMENT ON VIEW ussd_forsend IS 'список запросов которые н
 
 
 --
--- TOC entry 647 (class 1259 OID 359006)
+-- TOC entry 648 (class 1259 OID 359006)
 -- Name: vtrackers_in; Type: VIEW; Schema: public; Owner: gpsmon
 --
 
@@ -1635,8 +1778,8 @@ CREATE VIEW vtrackers_in AS
 ALTER TABLE public.vtrackers_in OWNER TO gpsmon;
 
 --
--- TOC entry 4773 (class 0 OID 0)
--- Dependencies: 647
+-- TOC entry 4809 (class 0 OID 0)
+-- Dependencies: 648
 -- Name: VIEW vtrackers_in; Type: COMMENT; Schema: public; Owner: gpsmon
 --
 
@@ -1644,7 +1787,7 @@ COMMENT ON VIEW vtrackers_in IS 'данные от трекеров';
 
 
 --
--- TOC entry 671 (class 1259 OID 1169883)
+-- TOC entry 672 (class 1259 OID 1169883)
 -- Name: vtrackers_in_h; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -1692,10 +1835,28 @@ CREATE VIEW vtrackers_in_h AS
 
 ALTER TABLE public.vtrackers_in_h OWNER TO postgres;
 
+SET search_path = cfg, pg_catalog;
+
+--
+-- TOC entry 4594 (class 2604 OID 1867289)
+-- Name: iconid; Type: DEFAULT; Schema: cfg; Owner: gpsmon
+--
+
+ALTER TABLE ONLY icon ALTER COLUMN iconid SET DEFAULT nextval('icon_iconid_seq'::regclass);
+
+
+--
+-- TOC entry 4593 (class 2604 OID 1867196)
+-- Name: groupid; Type: DEFAULT; Schema: cfg; Owner: gpsmon
+--
+
+ALTER TABLE ONLY icon_group ALTER COLUMN groupid SET DEFAULT nextval('icon_group_groupid_seq'::regclass);
+
+
 SET search_path = data, pg_catalog;
 
 --
--- TOC entry 4569 (class 2604 OID 1705657)
+-- TOC entry 4592 (class 2604 OID 1705657)
 -- Name: locationid; Type: DEFAULT; Schema: data; Owner: postgres
 --
 
@@ -1703,7 +1864,7 @@ ALTER TABLE ONLY location ALTER COLUMN locationid SET DEFAULT nextval('location_
 
 
 --
--- TOC entry 4560 (class 2604 OID 354687)
+-- TOC entry 4583 (class 2604 OID 354687)
 -- Name: id; Type: DEFAULT; Schema: data; Owner: gpsmon
 --
 
@@ -1711,7 +1872,7 @@ ALTER TABLE ONLY trackers ALTER COLUMN id SET DEFAULT nextval('trackers_id_seq':
 
 
 --
--- TOC entry 4564 (class 2604 OID 972462)
+-- TOC entry 4587 (class 2604 OID 972462)
 -- Name: ussdid; Type: DEFAULT; Schema: data; Owner: gpsmon
 --
 
@@ -1721,7 +1882,7 @@ ALTER TABLE ONLY ussd ALTER COLUMN ussdid SET DEFAULT nextval('ussd_ussdid_seq':
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 4549 (class 2604 OID 18105)
+-- TOC entry 4572 (class 2604 OID 18105)
 -- Name: carid; Type: DEFAULT; Schema: public; Owner: gpsmon
 --
 
@@ -1729,7 +1890,7 @@ ALTER TABLE ONLY cars ALTER COLUMN carid SET DEFAULT nextval('cars_carsid_seq'::
 
 
 --
--- TOC entry 4550 (class 2604 OID 18106)
+-- TOC entry 4573 (class 2604 OID 18106)
 -- Name: clientid; Type: DEFAULT; Schema: public; Owner: gpsmon
 --
 
@@ -1737,7 +1898,7 @@ ALTER TABLE ONLY clients ALTER COLUMN clientid SET DEFAULT nextval('clients_clie
 
 
 --
--- TOC entry 4551 (class 2604 OID 18107)
+-- TOC entry 4574 (class 2604 OID 18107)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: gpsmon
 --
 
@@ -1745,7 +1906,7 @@ ALTER TABLE ONLY geozones ALTER COLUMN id SET DEFAULT nextval('geozone_id_seq'::
 
 
 --
--- TOC entry 4553 (class 2604 OID 18108)
+-- TOC entry 4576 (class 2604 OID 18108)
 -- Name: logid; Type: DEFAULT; Schema: public; Owner: gpsmon
 --
 
@@ -1753,7 +1914,7 @@ ALTER TABLE ONLY logs ALTER COLUMN logid SET DEFAULT nextval('logs_logid_seq'::r
 
 
 --
--- TOC entry 4554 (class 2604 OID 18109)
+-- TOC entry 4577 (class 2604 OID 18109)
 -- Name: trackerid; Type: DEFAULT; Schema: public; Owner: gpsmon
 --
 
@@ -1761,11 +1922,31 @@ ALTER TABLE ONLY trackers ALTER COLUMN trackerid SET DEFAULT nextval('trackers_t
 
 
 --
--- TOC entry 4558 (class 2604 OID 18110)
+-- TOC entry 4581 (class 2604 OID 18110)
 -- Name: userid; Type: DEFAULT; Schema: public; Owner: gpsmon
 --
 
 ALTER TABLE ONLY users ALTER COLUMN userid SET DEFAULT nextval('users_userid_seq'::regclass);
+
+
+SET search_path = cfg, pg_catalog;
+
+--
+-- TOC entry 4629 (class 2606 OID 1867201)
+-- Name: groupid_pk; Type: CONSTRAINT; Schema: cfg; Owner: gpsmon; Tablespace: 
+--
+
+ALTER TABLE ONLY icon_group
+    ADD CONSTRAINT groupid_pk PRIMARY KEY (groupid);
+
+
+--
+-- TOC entry 4631 (class 2606 OID 1867294)
+-- Name: iconid_pk; Type: CONSTRAINT; Schema: cfg; Owner: gpsmon; Tablespace: 
+--
+
+ALTER TABLE ONLY icon
+    ADD CONSTRAINT iconid_pk PRIMARY KEY (iconid);
 
 
 SET search_path = data, pg_catalog;
@@ -1773,7 +1954,7 @@ SET search_path = data, pg_catalog;
 SET default_tablespace = gpsdata;
 
 --
--- TOC entry 4594 (class 2606 OID 18153)
+-- TOC entry 4619 (class 2606 OID 18153)
 -- Name: gps_unique_carid_tstmap; Type: CONSTRAINT; Schema: data; Owner: gpsmon; Tablespace: gpsdata
 --
 
@@ -1784,7 +1965,7 @@ ALTER TABLE ONLY gps
 SET default_tablespace = '';
 
 --
--- TOC entry 4602 (class 2606 OID 1705662)
+-- TOC entry 4627 (class 2606 OID 1705662)
 -- Name: location_locationid_key; Type: CONSTRAINT; Schema: data; Owner: postgres; Tablespace: 
 --
 
@@ -1793,7 +1974,7 @@ ALTER TABLE ONLY location
 
 
 --
--- TOC entry 4574 (class 2606 OID 1705664)
+-- TOC entry 4599 (class 2606 OID 1705664)
 -- Name: online_carid_key; Type: CONSTRAINT; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1802,7 +1983,7 @@ ALTER TABLE ONLY online
 
 
 --
--- TOC entry 4598 (class 2606 OID 354693)
+-- TOC entry 4623 (class 2606 OID 354693)
 -- Name: trackers_id_key; Type: CONSTRAINT; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1811,7 +1992,7 @@ ALTER TABLE ONLY trackers
 
 
 --
--- TOC entry 4600 (class 2606 OID 972467)
+-- TOC entry 4625 (class 2606 OID 972467)
 -- Name: ussd_ussdid_key; Type: CONSTRAINT; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1822,7 +2003,7 @@ ALTER TABLE ONLY ussd
 SET search_path = olap, pg_catalog;
 
 --
--- TOC entry 4576 (class 2606 OID 1705811)
+-- TOC entry 4601 (class 2606 OID 1705811)
 -- Name: gps_average_day_carid_day; Type: CONSTRAINT; Schema: olap; Owner: gpsmon; Tablespace: 
 --
 
@@ -1833,7 +2014,7 @@ ALTER TABLE ONLY gps_average_day
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 4578 (class 2606 OID 18116)
+-- TOC entry 4603 (class 2606 OID 18116)
 -- Name: cars_carsid_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1842,7 +2023,7 @@ ALTER TABLE ONLY cars
 
 
 --
--- TOC entry 4580 (class 2606 OID 18118)
+-- TOC entry 4605 (class 2606 OID 18118)
 -- Name: clients_clientid_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1851,7 +2032,7 @@ ALTER TABLE ONLY clients
 
 
 --
--- TOC entry 4582 (class 2606 OID 18120)
+-- TOC entry 4607 (class 2606 OID 18120)
 -- Name: clients_company_name_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1860,7 +2041,7 @@ ALTER TABLE ONLY clients
 
 
 --
--- TOC entry 4584 (class 2606 OID 18122)
+-- TOC entry 4609 (class 2606 OID 18122)
 -- Name: phonecard_number_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1869,7 +2050,7 @@ ALTER TABLE ONLY phonecard
 
 
 --
--- TOC entry 4586 (class 2606 OID 18124)
+-- TOC entry 4611 (class 2606 OID 18124)
 -- Name: trackers_imei_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1878,7 +2059,7 @@ ALTER TABLE ONLY trackers
 
 
 --
--- TOC entry 4588 (class 2606 OID 18126)
+-- TOC entry 4613 (class 2606 OID 18126)
 -- Name: trackers_trackerid_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1887,7 +2068,7 @@ ALTER TABLE ONLY trackers
 
 
 --
--- TOC entry 4590 (class 2606 OID 18128)
+-- TOC entry 4615 (class 2606 OID 18128)
 -- Name: users_userid_key; Type: CONSTRAINT; Schema: public; Owner: gpsmon; Tablespace: 
 --
 
@@ -1898,7 +2079,7 @@ ALTER TABLE ONLY users
 SET search_path = data, pg_catalog;
 
 --
--- TOC entry 4595 (class 1259 OID 1705666)
+-- TOC entry 4620 (class 1259 OID 1705666)
 -- Name: data_gps_arh_index_carid_tstamp; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1906,7 +2087,7 @@ CREATE INDEX data_gps_arh_index_carid_tstamp ON gps_arh USING btree (carid, tsta
 
 
 --
--- TOC entry 4596 (class 1259 OID 1705694)
+-- TOC entry 4621 (class 1259 OID 1705694)
 -- Name: data_gps_arh_index_tstamp; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1916,7 +2097,7 @@ CREATE INDEX data_gps_arh_index_tstamp ON gps_arh USING btree (tstamp);
 SET default_tablespace = gpsdata;
 
 --
--- TOC entry 4591 (class 1259 OID 18154)
+-- TOC entry 4616 (class 1259 OID 18154)
 -- Name: data_gps_index_carid_tstamp; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: gpsdata
 --
 
@@ -1924,7 +2105,7 @@ CREATE INDEX data_gps_index_carid_tstamp ON gps USING btree (carid, tstamp);
 
 
 --
--- TOC entry 4592 (class 1259 OID 18155)
+-- TOC entry 4617 (class 1259 OID 18155)
 -- Name: data_gps_index_tstamp; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: gpsdata
 --
 
@@ -1934,7 +2115,7 @@ CREATE INDEX data_gps_index_tstamp ON gps USING btree (tstamp);
 SET default_tablespace = '';
 
 --
--- TOC entry 4570 (class 1259 OID 18129)
+-- TOC entry 4595 (class 1259 OID 18129)
 -- Name: gps_from_trackers_imei; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1942,7 +2123,7 @@ CREATE INDEX gps_from_trackers_imei ON gps_from_trackers USING btree (imei);
 
 
 --
--- TOC entry 4571 (class 1259 OID 18130)
+-- TOC entry 4596 (class 1259 OID 18130)
 -- Name: gps_from_trackers_index_imei_tstamp; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
@@ -1950,15 +2131,26 @@ CREATE INDEX gps_from_trackers_index_imei_tstamp ON gps_from_trackers USING btre
 
 
 --
--- TOC entry 4572 (class 1259 OID 18131)
+-- TOC entry 4597 (class 1259 OID 18131)
 -- Name: gps_from_trackers_index_lat_lon; Type: INDEX; Schema: data; Owner: gpsmon; Tablespace: 
 --
 
 CREATE INDEX gps_from_trackers_index_lat_lon ON gps_from_trackers USING btree (lat, lon);
 
 
+SET search_path = cfg, pg_catalog;
+
 --
--- TOC entry 4738 (class 0 OID 0)
+-- TOC entry 4632 (class 2606 OID 1867295)
+-- Name: groupid_fk; Type: FK CONSTRAINT; Schema: cfg; Owner: gpsmon
+--
+
+ALTER TABLE ONLY icon
+    ADD CONSTRAINT groupid_fk FOREIGN KEY (groupid) REFERENCES icon_group(groupid);
+
+
+--
+-- TOC entry 4771 (class 0 OID 0)
 -- Dependencies: 8
 -- Name: public; Type: ACL; Schema: -; Owner: gpsmon
 --
@@ -1972,8 +2164,8 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 4768 (class 0 OID 0)
--- Dependencies: 643
+-- TOC entry 4804 (class 0 OID 0)
+-- Dependencies: 644
 -- Name: gpsdatafull; Type: ACL; Schema: public; Owner: gpsmon
 --
 
@@ -1984,7 +2176,7 @@ GRANT ALL ON TABLE gpsdatafull TO postgres;
 GRANT ALL ON TABLE gpsdatafull TO tgps;
 
 
--- Completed on 2014-06-23 11:25:30 EEST
+-- Completed on 2014-06-27 15:21:13 EEST
 
 --
 -- PostgreSQL database dump complete

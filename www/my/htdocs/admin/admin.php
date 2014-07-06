@@ -50,7 +50,9 @@ $fio=pg_result($res,0,"fio");
 echo "<div style='padding:0px 50px 0px 50px;height:100%;'>";
 echo "<div align=right style='font-family:arial;font-size:11px;'> <b>$fio</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; административная консоль управления (<a href='/admin/admin.php?typelogin=exitlogin'>выход</a>)</div>";
 echo "<div id='dialog' title='false'></div>";
-echo "<div id='dialog_icon' title='false'></div>";
+echo "<div id='dialog_icon' title='false'>";
+include_once('./object_icons.php');
+echo "</div>";
 echo "<div class='tabs' id='tabs'>
 <!-- Это сами вкладки -->
     <ul class='tabNavigation'>

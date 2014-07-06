@@ -1,12 +1,8 @@
-var carsicon="";
 var i;
 var cartar_intervalid;
 var cartar_interval=5000;
-for (i=1;i<=97;i++){
- carsicon=carsicon+'<a href="javascript:setcaricon('+i+');"><img src=/images/cars/car'+i+'.png></a>';
-};
     $(function(){
-      $( "#tabs" ).tabs({
+      $( ".tabs" ).tabs({
         cookie: { expires:1 }
       });
       $("#newcar, #newtracker, #newuser").button();
@@ -14,7 +10,6 @@ for (i=1;i<=97;i++){
       $("#cartar").dialog({modal:true,autoOpen: false,close:cartar_close });
       $("#dialog_icon").dialog({modal:true,autoOpen: false});
       $('#dialog_icon').dialog({ title: 'Выбор иконки'});
-      $('#dialog_icon').html(carsicon);
       $('#dialog_icon').dialog( 'option', 'height', 340 );
       $('#dialog_icon').dialog( 'option', 'width', 560);
     });
@@ -127,8 +122,8 @@ function usercar (id){
 }
 
 function setcaricon (id){
- document.getElementById('imgcar').src='/images/cars/car'+id+'.png';
- document.getElementById('cicon').value='car'+id+'.png';
+ document.getElementById('imgcar').src='/images/cars/'+id;
+ document.getElementById('cicon').value=id;
  $('#dialog_icon').dialog('close');
 }
 function caricon (){
