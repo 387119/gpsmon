@@ -407,7 +407,7 @@ extern void psql_gtinf(char *in){
 	}
 	sprintf(s_sendtime,"%c%c%c%c-%c%c-%c%c %c%c:%c%c:%c%c",sendtime[0],sendtime[1],sendtime[2],sendtime[3],sendtime[4],sendtime[5],sendtime[6],sendtime[7],sendtime[8],sendtime[9],sendtime[10],sendtime[11],sendtime[12],sendtime[13]);
 	memset(json_str,'\0',1024);
-	sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.6\",\"module\":{\"id\":2,\"name\":\"queclink\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":\"%s\"},\"gsm\":{\"rx-level\":\"%s\"},\"sensors\":{\"power\":{\"internal\":{\"int1\":{\"volt\":\"%s\",\"percent\":\"%s\"}}}}}');",tstamp,imei,s_sendtime,rx,volt,battery);
+	sprintf(json_str," ('{\"class\":3,\"jsonversion\":\"0.1.6\",\"module\":{\"id\":2,\"name\":\"queclink\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":\"%s\"},\"gsm\":{\"rx-level\":\"%s\"},\"sensors\":{\"power\":{\"internal\":{\"int1\":{\"volt\":\"%s\",\"percent\":\"%s\"}}}}}');",tstamp,imei,s_sendtime,rx,volt,battery);
 	strcat(json_query,json_str);
 	memset(&to,'\0',15);
 	sprintf(to,"+SACK:%s$",count);
