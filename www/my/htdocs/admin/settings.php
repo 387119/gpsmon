@@ -1,5 +1,6 @@
 <?php
 require_once "config.php";
+
 echo "<div id='atab'>";
 if ($_POST['saveset']==1){
 $res=0;
@@ -26,5 +27,7 @@ $sql="select clientid,company_name as name from clients where clientid in (selec
   }
 echo "</table>";
 echo "<input type=submit id=newcar value='Сохранить'></form></div>";
+
+
 
 ?>

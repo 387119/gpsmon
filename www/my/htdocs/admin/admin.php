@@ -5,6 +5,7 @@ require_once "./config.php";
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"  />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <script src="/jquery/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<link type="text/css" href="/css/index.css" rel="stylesheet" />
 <link type="text/css" href="/css/my.messages.css" rel="stylesheet" />
 <?php
 if ($secure>=50){
@@ -47,7 +48,7 @@ $res=pg_query ("select company_name from clients where clientid in (select clien
 
 $res=pg_query ("select fam || ' '|| name || ' ' || otch as fio from users where userid=$userid");
 $fio=pg_result($res,0,"fio");
-echo "<div style='padding:0px 50px 0px 50px;height:100%;'>";
+echo "<div style='padding:0px 10px 0px 10px;height:100%;'>";
 echo "<div align=right style='font-family:arial;font-size:11px;'> <b>$fio</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; административная консоль управления (<a href='/admin/admin.php?typelogin=exitlogin'>выход</a>)</div>";
 echo "<div id='dialog' title='false'></div>";
 echo "<div id='dialog_icon' title='false'>";
@@ -59,6 +60,7 @@ echo "<div class='tabs' id='tabs'>
      <li><a class='' href='#tabs-1'>Машины</a></li>
      <li><a class='' href='#tabs-2'>Трекеры</a></li>
      <li><a class='' href='#tabs-3'>Пользователи</a></li>
+     <li><a class='' href='#tabs-7'>Группировка</a></li>
      <li><a class='' href='#tabs-4'>Настройки</a></li>
      <li><a class='' href='#tabs-5'>Логи</a></li>";
 if ($secure>=90){echo "\n<li><a class='' href='#tabs-6'>Компании</a></li>";}
@@ -84,6 +86,10 @@ if ($secure>=90){
  echo"<div id=\"tabs-6\">";
   include_once "company.php";
  echo "
+ </div>
+ <div id=\"tabs-7\">";
+ include_once "groups.php";
+echo "
  </div>";
 }
 echo"</div>

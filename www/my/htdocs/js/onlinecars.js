@@ -24,6 +24,7 @@ function updatemarkers (){
 					'<br><b>дата обновления: </b> <font style=\"color:'+datacar[i][13]+'\">'+datacar[i][4]+'</font>'+
 					'<br><b>Качество сигнала GPS: </b> <img src=images/gps_s_'+datacar[i][5]+'.png style=\"height:17px;\">'+
 					'<br><b>Качество сигнала GSM: </b> <img src=images/gsmsig'+datacar[i][12]+'.png style=\"height:15px;\">'+
+					'<br><b>Заряд батареи: </b> '+datacar[i][16]+''+
 					'<br><br><img src=images/icon_edit.png>&nbsp;<a href=\"javascript:menu_editcars_show('+i+');\">редактировать данные машины</a>'
 			},{
 			iconImageHref: 'images/cars.php?carid='+i+'&icon='+datacar[i][2]+'&az'+datacar[i][8]+'&spd='+datacar[i][6], // картинка иконки
@@ -42,6 +43,7 @@ markers[i].properties.set('balloonContent','<img src=\"images/cars/'+datacar[i][
 					'<br><b>дата обновления: </b> <font style=\"color:'+datacar[i][13]+'\">'+datacar[i][4]+'</font>'+
 					'<br><b>Качество сигнала GPS: </b> <img src=images/gps_s_'+datacar[i][5]+'.png style=\"height:17px;\">'+
 					'<br><b>Качество сигнала GSM: </b> <img src=images/gsmsig'+datacar[i][12]+'.png style=\"height:15px;\">'+
+					'<br><b>Заряд батареи: </b> '+datacar[i][16]+''+
 					'<br><br><img src=images/icon_edit.png>&nbsp;<a href=\"javascript:menu_editcars_show('+i+');\">редактировать данные машины</a>');//change balloon
 markers[i].options.set('iconImageHref', 'images/cars.php?carid='+i+'&icon='+datacar[i][2]+'&az'+datacar[i][8]+'&spd='+datacar[i][6]);//change icon
  }
@@ -109,8 +111,8 @@ function updatedata (){
             		$(this).attr('gsmsignal'),
             		$(this).attr('colortstamp'),
             		$(this).attr('gpsdop'),
-            		$(this).attr('maxspeed')
-            		
+            		$(this).attr('maxspeed'),
+            		$(this).attr('battery_percent')
               ];
               });
 	      updatemarkers();

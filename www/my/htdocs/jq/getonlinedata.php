@@ -9,7 +9,7 @@
  // получаем список онлайн данных по машинам и передаём его на вывод
 # carid,name,gosnum,icon,tstamp,speed,lat,lon,
   $sql="
-  select carid,azimut,speed,lat/600000::real as lat,lon/600000::real as lon,tstamp,dest_day/1000::real as dest_day,((gpsdop*6)/10)::integer as gpsdop,
+  select carid,azimut,speed,lat,lon,tstamp,dest_day/1000::real as dest_day,((gpsdop*6)/10)::integer as gpsdop,batttery_percent,
    (select icon from cars where cars.carid=do1.carid) as icon,
    (select name from cars where cars.carid=do1.carid) as name,
    (select fiodriver1 from cars where cars.carid=do1.carid) as fiodriver1,
@@ -23,7 +23,7 @@
        end as gpsicon,
     ceil(gsmsignal*5/32)::integer as gsmsignal,
     case  when (now()-tstamp<interval '20 minutes') then 'black' when (now()-tstamp<interval '3 hour') then 'c88e25' else 'red' end  as colortstamp
-    from data.online as do1 where carid in (select carid from users_cars where userid=$userid) and lat !=0 and lon !=0;
+    from online as do1 where carid in (select carid from users_cars where userid=$userid) and lat is not null and lon is not null;
                                                                                                                                                                                                                                  
 ";
   $res=pg_query($sql);
@@ -47,7 +47,8 @@
 		 'gsmsignal'=>"$gsmsignal",
 		 'colortstamp'=>"$colortstamp",
 		 'gpsdop'=>"$gpsdop",
-		 'maxspeed'=>"$maxspeed"
+		 'maxspeed'=>"$maxspeed",
+		 'battery_percent'=>"$batttery_percent"
 		  );
 
   }

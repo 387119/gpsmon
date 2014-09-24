@@ -5,8 +5,8 @@ require_once ("../config.php");
 $sql="select carid,icon,name,gosnum,(select tstamp from data.online as don where don.carid=cars.carid)::timestamp without time zone as lasttstamp,fiodriver1,teldriver1,
 		 (select speed from data.online as don where don.carid=cars.carid) as speed,
 		 (select dest_day from data.online as don where don.carid=cars.carid)/1000::real as dest_day,
-		 (select lat from data.online as don where don.carid=cars.carid)/600000::real as lat,
-		 (select lon from data.online as don where don.carid=cars.carid)/600000::real as lon,
+		 (select gis.st_y(location) from data.online as don where don.carid=cars.carid)::text as lat,
+		 (select gis.st_x(location) from data.online as don where don.carid=cars.carid)::text as lon,
 		 (select ceil(gsmsignal*5/32) from data.online as don where don.carid=cars.carid)::integer as gsmsig,
 		 (select case  when (gpsdop/10<=8) then 'on' when (gpsdop/10<=20) then 'bad' else 'off' end from data.online as don  where don.carid=cars.carid) as gpsicon,
 		 (select case  when (now()-tstamp<interval '20 minutes') then 'black' when (now()-tstamp<interval '3 hour') then 'c88e25' else 'red' end from data.online as don  where don.carid=cars.carid) as tstamp_color
