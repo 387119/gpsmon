@@ -9,6 +9,8 @@
 #include <libpq-fe.h>
 #include <sys/time.h>
 #include <time.h>
+#include <wait.h>
+#include <signal.h>
 
 #define PORT 9014
 
@@ -49,6 +51,11 @@ extern void psql_gtdog(char *in);		//Пакет с данными
 //Location by call report
 extern void psql_gtlbc(char *in);		//Пакет с данными
 
+//Kill zombies process
+extern void kill_zombies(int i);
+
+//Convertion str time into unix tstamp
+unsigned int strtotime(char *time);
 
 struct sockaddr_in	servaddr;
 struct sockaddr_in	clientaddr;
@@ -60,7 +67,7 @@ FILE	*pidfile;
 
 time_t	tstamp;
 
-int	pid;
+int	pid,pid2;
 int	sock, bind_sock;
 
 
@@ -71,4 +78,5 @@ char	head[20];
 
 PGconn	*conn;
 PGresult *json_res;
+PGresult *res;
 

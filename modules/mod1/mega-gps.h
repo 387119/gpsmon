@@ -13,11 +13,15 @@
 #include <netinet/in.h>
 #include <stdint.h>
 #include <libpq-fe.h>
+#include <sys/shm.h>
+#include <sys/ipc.h>
+#include <signal.h>
 //#include <postgresql/libpq-fe.h>
 
 
 //#define DEFAULT_LOG_PATH "/var/gpsmod/mega-gps/mega-gps-v355.log"
 //#define INVALID_LATITUDE 0x80000000
+#define TRACKERS 10000
 
 //Новый протокол
 typedef struct{
@@ -181,3 +185,27 @@ struct cr{
 	unsigned char	ct;
 	unsigned char	rt;
 }cr;
+
+char ex;
+
+int	check_time_after,check_time_before;
+
+int gstime;
+
+#ifndef SHMEM_TYPES
+#define SHMEM_TYPES
+struct memory_block{
+	struct cpoint{
+		char imei[15];
+		int	time;
+		int	sessiontime;
+		int	ip;
+		unsigned short port;
+	}cpoint[TRACKERS];
+};
+#endif
+
+#define FTOK_FILE "/var/run/mega-gps-v355.pid"
+key_t key;
+int shmid;
+struct memory_block *mblock;

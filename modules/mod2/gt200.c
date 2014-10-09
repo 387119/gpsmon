@@ -1,7 +1,7 @@
 #include "queclink.h"
 
 extern void psql_gthbd(char *in){
-	char type[10],imei[15],name[20],time[14],count[5],version[6];
+	char type[10],imei[15],name[20],time[14],count[5],version[12];
 	char to[30];
 	int start,stop;
 	int i=0,n,x;
@@ -16,7 +16,7 @@ extern void psql_gthbd(char *in){
 				num=2;
 			}
 			else if(num==2){
-				memset(&version,'\0',6);
+				memset(&version,'\0',12);
 				memcpy(&version,&in[start],i-start);
 				num=3;
 			}
@@ -46,7 +46,9 @@ extern void psql_gthbd(char *in){
 		i++;
 	}
 	memset(&to,'\0',30);
-	sprintf(to,"+SACK:GTHBD,%s,%s$",version,count);
+	printf("version=%s\ncount=%s\n%s\n",version,count,to);
+	sprintf(to,"+SACK:GTHBD,%6s,%4s$",version,count);
+	printf("%s\n",to);
 	sendto(sock,to,24,0,(struct sockaddr *)&clientaddr, sizeof(clientaddr));
 	
 }
@@ -94,8 +96,8 @@ extern void psql_gtpdp(char *in){
 
 
 extern void psql_gtfri(char *in){
-	unsigned char count[5],imei[15],lat[15],lon[15],alt[15],gpsdop[5],sendtime[15],gpstime[14];
-	char to[15],json_str[1024],json_query[2048];
+	unsigned char count[5],imei[15],lat[15],lon[15],alt[15],gpsdop[5],sendtime[15],gpstime[14],speed[10];
+	char to[15],json_str[1024],json_query[2048],str[1024],str_query[2048];
 	int start;
 	int i=0,n,x;
 	char s_gpstime[19],s_sendtime[19];
@@ -103,7 +105,14 @@ extern void psql_gtfri(char *in){
 	start=0;
 	tstamp = time(NULL);
 	memset(json_query,'\0',2048);
-	strcpy(json_query,"INSERT INTO vtrackers_in (json_data) values");
+	memset(str_query,'\0',2048);
+	strcpy(json_query,"INSERT INTO sensors.vdatain (json_data) values");
+	strcpy(str_query,"INSERT INTO data.gps_from_trackers (imei,tstamp, lat, lon,speed, gpsdop,class) values");
+	conn=PQsetdbLogin("172.16.17.4","5432",NULL,NULL,"gpsmon","gpsmon",NULL);
+	if(PQstatus(conn)==CONNECTION_BAD){
+		syslog(LOG_DEBUG,"Ошибка подключения к DB");
+		exit(0);
+	}
 	while(in[i]!='\0'){
 		if(in[i]==','||in[i]=='$'){
 			if(num==1){
@@ -135,6 +144,8 @@ extern void psql_gtfri(char *in){
 				num=9;
 			}
 			else if(num==9){
+				memset(&speed,'\0',10);
+				memcpy(&speed,&in[start],i-start);
 				num=10;
 			}
 			else if(num==10){
@@ -145,7 +156,8 @@ extern void psql_gtfri(char *in){
 				memcpy(&alt,&in[start],i-start);
 				num=12;
 			}
-			else if(num==12){				memset(&lon,'\0',15);
+			else if(num==12){				
+				memset(&lon,'\0',15);
 				memcpy(&lon,&in[start],i-start);
 				num=13;
 			}
@@ -194,19 +206,33 @@ extern void psql_gtfri(char *in){
 	sprintf(s_gpstime,"%c%c%c%c-%c%c-%c%c %c%c:%c%c:%c%c",gpstime[0],gpstime[1],gpstime[2],gpstime[3],gpstime[4],gpstime[5],gpstime[6],gpstime[7],gpstime[8],gpstime[9],gpstime[10],gpstime[11],gpstime[12],gpstime[13]);
 	sprintf(s_sendtime,"%c%c%c%c-%c%c-%c%c %c%c:%c%c:%c%c",sendtime[0],sendtime[1],sendtime[2],sendtime[3],sendtime[4],sendtime[5],sendtime[6],sendtime[7],sendtime[8],sendtime[9],sendtime[10],sendtime[11],sendtime[12],sendtime[13]);
 	memset(json_str,'\0',1024);
+	memset(str,'\0',1024);
 	sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.6\",\"module\":{\"id\":2,\"name\":\"queclink\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":\"%s\"},\"locations\":{\"location1\":{\"tstamp\":\"%s\",\"latitude\":\"%s\",\"longitude\":\"%s\",\"altitude\":\"%s\",\"quality\":\"%s\"}}}');",tstamp,imei,s_sendtime,s_gpstime,lat,lon,alt,gpsdop);
+	sprintf(str," ('%s',to_timestamp(%d),%d,%d,%d,%s,2);",imei,strtotime(s_gpstime),(int)((float)600000*atof(lat)),(int)((float)600000*atof(lon)),(int)atof(speed),gpsdop);
 	strcat(json_query,json_str);
+	strcat(str_query,str);
 	memset(&to,'\0',15);
 	sprintf(to,"+SACK:%s$",count);
+	syslog(LOG_DEBUG,"Выполняем запрос");
 	json_res=PQexec(conn,json_query);
-		if(PQresultStatus(json_res)==PGRES_COMMAND_OK){
-			syslog(LOG_DEBUG,"Данные по  %s успешно записаны в DB",imei);
-			sendto(sock,to,11,0,(struct sockaddr *)&clientaddr, sizeof(clientaddr));
-			}
-		else {
-			syslog(LOG_DEBUG,"Ошибка при записи данных в базу по трекеру %s",imei);
-			syslog(LOG_DEBUG,"%s",json_query);
-			}
+	res=PQexec(conn,str_query);
+	if(PQresultStatus(json_res)==PGRES_COMMAND_OK&&PQresultStatus(res)==PGRES_COMMAND_OK){
+		syslog(LOG_DEBUG,"Данные по  %s успешно записаны в DB",imei);
+		//syslog(LOG_DEBUG,"%s",json_query);
+		//syslog(LOG_DEBUG,"%s",str_query);
+		sendto(sock,to,11,0,(struct sockaddr *)&clientaddr, sizeof(clientaddr));
+		PQclear(json_res);
+		PQclear(res);
+		PQfinish(conn);
+	}
+	else {
+		syslog(LOG_DEBUG,"Ошибка при записи данных в базу по трекеру %s",imei);
+		syslog(LOG_DEBUG,"%s",json_query);
+		syslog(LOG_DEBUG,"%s",str_query);
+		PQclear(json_res);
+		PQclear(res);
+		PQfinish(conn);
+	}
 }
 
 extern void psql_gtdog(char *in){
@@ -306,12 +332,17 @@ extern void psql_gtinf(char *in){
 	char to[15],json_str[1024],json_query[2048];
 	char s_sendtime[19];
 	memset(json_query,'\0',2048);
-	strcpy(json_query,"INSERT INTO vtrackers_in (json_data) values");
+	strcpy(json_query,"INSERT INTO sensors.vdatain (json_data) values");
 	int start;
 	int i=0,n,x;
 	unsigned char num=1;
 	start=0;
 	tstamp = time(NULL);
+	conn=PQsetdbLogin("172.16.17.4","5432",NULL,NULL,"gpsmon","gpsmon",NULL);
+	if(PQstatus(conn)==CONNECTION_BAD){
+		syslog(LOG_DEBUG,"Ошибка подключения к DB");
+		exit(0);
+	}
 	while(in[i]!='\0'){
 		if(in[i]==','||in[i]=='$'){
 			if(num==1){
@@ -411,15 +442,20 @@ extern void psql_gtinf(char *in){
 	strcat(json_query,json_str);
 	memset(&to,'\0',15);
 	sprintf(to,"+SACK:%s$",count);
+	syslog(LOG_DEBUG,"Выполняем запрос");
 	json_res=PQexec(conn,json_query);
-		if(PQresultStatus(json_res)==PGRES_COMMAND_OK){
-			//syslog(LOG_DEBUG,"Данные по  %s успешно записаны в DB",imei);
-			sendto(sock,to,11,0,(struct sockaddr *)&clientaddr, sizeof(clientaddr));
-			}
-		else {
-			syslog(LOG_DEBUG,"Ошибка при записи данных в базу по трекеру %s",imei);
-			syslog(LOG_DEBUG,"%s",json_query);
-			}
+	if(PQresultStatus(json_res)==PGRES_COMMAND_OK){
+		syslog(LOG_DEBUG,"Данные по  %s успешно записаны в DB",imei);
+		sendto(sock,to,11,0,(struct sockaddr *)&clientaddr, sizeof(clientaddr));
+		PQclear(json_res);
+		PQfinish(conn);
+	}
+	else {
+		syslog(LOG_DEBUG,"Ошибка при записи данных в базу по трекеру %s",imei);
+		syslog(LOG_DEBUG,"%s",json_query);
+		PQclear(json_res);
+		PQfinish(conn);
+	}
 
 }
 

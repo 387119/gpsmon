@@ -211,3 +211,43 @@ extern void WriteCopy(char *status, char path[100],char* format, ...){
 		}
 	}
 }
+
+extern void prog_ex(){
+	ex=0;
+}
+
+
+char checkPoint(int gpstime, int time, int count){
+	if(gpstime-time>=600){
+		mblock->cpoint[count].time=gpstime;
+		return 1;
+	}
+	else return 0;
+}
+
+int checkOnlineCars(){
+	time_t loc_time;
+	time(&loc_time);
+	int i,online=0,offline=0;
+	if(gstime==0){
+		gstime=loc_time;
+		return 0;
+	}
+	if(loc_time-gstime>180){
+		//openlog("INFORMATION",LOG_PID,LOG_LOCAL0);
+		for(i=0;i<gg.counter;i++){
+			if(loc_time-mblock->cpoint[i].sessiontime>180){
+				if(gg.trackers[i].ip!=0){
+					syslog(LOG_WARNING,"Трекеру %s под номером %d присвоен статус оффлайн",mblock->cpoint[i].imei, i);
+				}
+				gg.trackers[i].ip = 0;
+				gg.trackers[i].port = 0;
+				offline++;
+			}
+			else online++;
+		}
+		syslog(LOG_WARNING,"Online  = %d, Offline = %d",online,offline);
+		//closelog();
+		gstime=loc_time;
+	}
+}

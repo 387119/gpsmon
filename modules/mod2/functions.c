@@ -3,12 +3,13 @@
 
 
 extern void GetHead(char *in, char *out){
+	syslog(LOG_INFO,"Определяем заголовок пакета");
 	int i=0;
 	while(in[i]!=','){
 		out[i]=in[i];
 		i++;
 	}
-	
+	syslog(LOG_INFO,"Заголовок пакета %s",out);
 }
 
 

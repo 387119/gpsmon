@@ -70,7 +70,7 @@ void init_344(void){
 
 void session_344(void){
 	char imei[15],iccid[19];
-	int version_sw,version_hw;
+	int version_sw,version_hw,check_time;
     if(gg.debug_level>2&&gg.debug_level<5){
 	int ip_ip;
 	ip_ip=htonl(gg.clientaddr.sin_addr.s_addr);
@@ -126,6 +126,7 @@ void session_344(void){
 		memcpy(&gg.trackers[gg.i].versionsw,&gg.rxbuf[19],4);
 		gg.trackers[gg.i].versionhw=version_hw;
 		gg.trackers[gg.i].time=gg.tstamp;
+		mblock->cpoint[gg.i].sessiontime=gg.tstamp;
 		ipp=&gg.trackers[gg.i].ip;
 		ip4=*ipp;
 		//printf("№%d Данные по трекеру %s успешно обновлены %d.%d.%d.%d:%d\n",gg.i,gg.trackers[gg.i].imei,ip4.i4,ip4.i3,ip4.i2,ip4.i1,gg.trackers[gg.i].port);
@@ -144,7 +145,17 @@ void session_344(void){
 	gg.trackers[gg.counter].ip=htonl(gg.clientaddr.sin_addr.s_addr);
 	gg.trackers[gg.counter].port=htons(gg.clientaddr.sin_port);
 	gg.trackers[gg.counter].time=gg.tstamp;
-	for(gg.i=0;gg.i<15;gg.i++)gg.trackers[gg.counter].imei[gg.i]=gg.imei[gg.i];
+	for(gg.i=0;gg.i<15;gg.i++){
+		gg.trackers[gg.counter].imei[gg.i]=gg.imei[gg.i];
+		mblock->cpoint[gg.counter].imei[gg.i]=gg.imei[gg.i];
+	}
+	mblock->cpoint[gg.counter].sessiontime=gg.tstamp;
+	check_time=getCheckTime(mblock->cpoint[gg.counter].imei);
+	if(check_time>=0)mblock->cpoint[gg.counter].time=check_time;
+	else if(check_time==-1)syslog(LOG_DEBUG,"getCheckTime():Ошибка подключения к БД");
+	else if(check_time==-2)syslog(LOG_DEBUG,"getCheckTime():Ошибка выполнения запроса");
+	else if(check_time==-3)syslog(LOG_DEBUG,"getCheckTime():Не найдено совпадений по imei='%s'",mblock->cpoint[gg.counter].imei);
+	else if(check_time==-4)syslog(LOG_DEBUG,"getCheckTime():Больше одного совпадения по imei='%s'",mblock->cpoint[gg.counter].imei);
 	memcpy(&gg.trackers[gg.counter].versionsw,&gg.rxbuf[19],4);
 	gg.trackers[gg.counter].versionhw=version_hw;
 	ipp=&gg.trackers[gg.counter].ip;
@@ -153,6 +164,7 @@ void session_344(void){
 	if(gg.debug_level>0&&gg.debug_level<5){
 		openlog("INFO",LOG_PID,LOG_LOCAL1);
 		syslog(LOG_DEBUG,"№%d Трекер %s авторизован с %d.%d.%d.%d:%d ",gg.counter,gg.trackers[gg.counter].imei,ip4.i4,ip4.i3,ip4.i2,ip4.i1,gg.trackers[gg.counter].port);
+		//syslog(LOG_DEBUG,"Новая структура imei='%s'",mblock->cpoint[gg.counter].imei);
 		closelog();
 		}
 	gg.counter++;												//Счетчик трекеров ув. на 1
@@ -275,14 +287,16 @@ void parsdata_344_psql(){
     memset(&query,'\0',4096);
     memset(&json_query,'\0',24000);
     strcpy(query,"INSERT INTO data.gps_from_trackers(imei,tstamp,lat,lon,speed,dut,azimut,gsmsignal,gpsdop,signal_restart,volt,class) values");
-    strcpy(json_query,"INSERT INTO vtrackers_in (json_data) values");
+    strcpy(json_query,"INSERT INTO sensors.vdatain (json_data) values");
     for(gg.i=0;gg.i<10000;gg.i++){
 	if(gg.trackers[gg.i].ip==htonl(gg.clientaddr.sin_addr.s_addr)&&gg.trackers[gg.i].port==htons(gg.clientaddr.sin_port)){
+		//syslog(LOG_DEBUG,"Принимаем данные с трекера %s, checkpoint = %d",mblock->cpoint[gg.i].imei,mblock->cpoint[gg.i].time);
 		memset(&copy_lock,'\0',130);
 		memset(&raw_lock,'\0',130);
 		memset(&r1,'\0',100);
 		memset(&c1,'\0',100);
 		gg.tstamp=time(NULL);
+		mblock->cpoint[gg.i].sessiontime=gg.tstamp;
 		gettimeofday(&msec,NULL);
 		timein=localtime(&gg.tstamp);
 		strftime(zone,6,"%z",timein);
@@ -322,7 +336,7 @@ void parsdata_344_psql(){
 				sprintf(str," ('%s',to_timestamp(%d),%d,%d,%d,E'{null,null}',%d,%d,%d,%d,E'{%d,%d}',2),",gg.trackers[gg.i].imei,md.t,md.lat,md.lng,d344.speed+d344.speed_hi,d344.dir*2,d344.rx,d344.dop,boot_if(),vv1,vv2);
 				strcat(query,str);
 				//sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.4\",\"module\":{\"name\":\"mega-gps\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":%d,\"versionsw\":%d,\"versionhw\":%d,\"boot-flag\":%d,\"gsm\":{\"location-area-code\":%d,\"cell-index\":%d,\"mcc\":%d,\"mnc\":%d,\"rx-level\":%d}},\"locations\":{\"location1\":{\"tstamp\":\%d,\"latitude\":%d,\"longitude\":%d,\"altitude\":%d,\"speed\":%d,\"azimuth\":%d,\"quality\":%d}},\"sensors\":{\"temperature\":{\"tracker\":%d},\"voltage\":{\"external\":{\"ext1\":%d},\"internal\":{\"int1\":%d}},\"dut\":{\"dut1\":\"null\",\"dut2\":\"null\"}}}'),",gg.tstamp,gg.trackers[gg.i].imei,md.t,gg.trackers[gg.i].versionsw,gg.trackers[gg.i].versionhw,boot_if(),d344.lac,d344.ci,d344.mcc,d344.mnc,d344.rx,md.t,md.lat,md.lng,d344.alt+d344.alt_hi,d344.speed+d344.speed_hi,d344.dir*2,d344.dop,d344.temp,vv1,vv2);
-				sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.5\",\"module\":{\"id\":\"1\",\"name\":\"mega-gps\",\"info\":\"mega-gps-v355\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":%d,\"versionsw\":%d,\"versionhw\":%d,\"boot-flag\":%d},\"gsm\":{\"gsm1\":{\"location-area-code\":%d,\"cell-index\":%d,\"mcc\":%d,\"mnc\":%d,\"rx-level\":%d}},\"locations\":{\"location1\":{\"tstamp\":\%d,\"latitude\":%d,\"longitude\":%d,\"altitude\":%d,\"speed\":%d,\"azimuth\":%d,\"quality\":%d}},\"sensors\":{\"temperature\":{\"tracker\":%d},\"voltage\":{\"external\":{\"ext1\":%d},\"internal\":{\"int1\":%d}},\"dut\":{\"dut1\":\"\",\"dut2\":\"\"}}}'),",gg.tstamp,gg.trackers[gg.i].imei,md.t,gg.trackers[gg.i].versionsw,gg.trackers[gg.i].versionhw,boot_if(),d344.lac,d344.ci,d344.mcc,d344.mnc,d344.rx,md.t,md.lat,md.lng,d344.alt+d344.alt_hi,d344.speed+d344.speed_hi,d344.dir*2,d344.dop,d344.temp,vv1,vv2);
+				sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.7\",\"module\":{\"id\":\"1\",\"name\":\"mega-gps\",\"info\":\"mega-gps-v355\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":%d,\"versionsw\":%d,\"versionhw\":%d,\"boot-flag\":%d,\"checkpoint\":%d},\"gsm\":{\"gsm1\":{\"location-area-code\":%d,\"cell-index\":%d,\"mcc\":%d,\"mnc\":%d,\"rx-level\":%d}},\"locations\":{\"location1\":{\"tstamp\":\%d,\"latitude\":%d,\"longitude\":%d,\"altitude\":%d,\"speed\":%d,\"azimuth\":%d,\"quality\":%d}},\"sensors\":{\"temperature\":{\"tracker\":%d},\"voltage\":{\"external\":{\"ext1\":%d},\"internal\":{\"int1\":%d}},\"dut\":{\"dut1\":\"\",\"dut2\":\"\"}}}'),",gg.tstamp,gg.trackers[gg.i].imei,md.t,gg.trackers[gg.i].versionsw,gg.trackers[gg.i].versionhw,boot_if(),checkPoint(md.t,mblock->cpoint[gg.i].time,gg.i),d344.lac,d344.ci,d344.mcc,d344.mnc,d344.rx,md.t,md.lat,md.lng,d344.alt+d344.alt_hi,d344.speed+d344.speed_hi,d344.dir*2,d344.dop,d344.temp,vv1,vv2);
 				strcat(json_query,json_str);
 				}
 			for(x=0;x<4096;x++){
@@ -370,7 +384,7 @@ void parsdata_344_psql(){
 				sprintf(str," ('%s',to_timestamp(%d),%d,%d,%d,E'{%d,%d}',%d,%d,%d,%d,E'{%d,%d}',2),",gg.trackers[gg.i].imei,md.t,md.lat,md.lng,d344.speed+d344.speed_hi,ddyt.dyt1,ddyt.dyt2,d344.dir*2,d344.rx,d344.dop,boot_if(),vv1,vv2);
 				strcat(query,str);
 				//sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.4\",\"module\":{\"name\":\"mega-gps\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":%d,\"versionsw\":%d,\"versionhw\":%d,\"boot-flag\":%d,\"gsm\":{\"location-area-code\":%d,\"cell-index\":%d,\"mcc\":%d,\"mnc\":%d,\"rx-level\":%d}},\"locations\":{\"location1\":{\"tstamp\":\%d,\"latitude\":%d,\"longitude\":%d,\"altitude\":%d,\"speed\":%d,\"azimuth\":%d,\"quality\":%d}},\"sensors\":{\"temperature\":{\"tracker\":%d},\"voltage\":{\"external\":{\"ext1\":%d},\"internal\":{\"int1\":%d}},\"dut\":{\"dut1\":%d,\"dut2\":%d}}}'),",gg.tstamp,gg.trackers[gg.i].imei,md.t,gg.trackers[gg.i].versionsw,gg.trackers[gg.i].versionhw,boot_if(),d344.lac,d344.ci,d344.mcc,d344.mnc,d344.rx,md.t,md.lat,md.lng,d344.alt+d344.alt_hi,d344.speed+d344.speed_hi,d344.dir*2,d344.dop,d344.temp,vv1,vv2,ddyt.dyt1,ddyt.dyt2);
-				sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.5\",\"module\":{\"id\":\"1\",\"name\":\"mega-gps\",\"info\":\"mega-gps-v355\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":%d,\"versionsw\":%d,\"versionhw\":%d,\"boot-flag\":%d},\"gsm\":{\"gsm1\":{\"location-area-code\":%d,\"cell-index\":%d,\"mcc\":%d,\"mnc\":%d,\"rx-level\":%d}},\"locations\":{\"location1\":{\"tstamp\":\%d,\"latitude\":%d,\"longitude\":%d,\"altitude\":%d,\"speed\":%d,\"azimuth\":%d,\"quality\":%d}},\"sensors\":{\"temperature\":{\"tracker\":%d},\"voltage\":{\"external\":{\"ext1\":%d},\"internal\":{\"int1\":%d}},\"dut\":{\"dut1\":%d,\"dut2\":%d}}}'),",gg.tstamp,gg.trackers[gg.i].imei,md.t,gg.trackers[gg.i].versionsw,gg.trackers[gg.i].versionhw,boot_if(),d344.lac,d344.ci,d344.mcc,d344.mnc,d344.rx,md.t,md.lat,md.lng,d344.alt+d344.alt_hi,d344.speed+d344.speed_hi,d344.dir*2,d344.dop,d344.temp,vv1,vv2,ddyt.dyt1,ddyt.dyt2);
+				sprintf(json_str," ('{\"class\":2,\"jsonversion\":\"0.1.7\",\"module\":{\"id\":\"1\",\"name\":\"mega-gps\",\"info\":\"mega-gps-v355\",\"version\":\"0.0.1\",\"tstamp\":%d},\"tracker\":{\"imei\":\"%s\",\"tstamp\":%d,\"versionsw\":%d,\"versionhw\":%d,\"boot-flag\":%d,\"checkpoint\":%d},\"gsm\":{\"gsm1\":{\"location-area-code\":%d,\"cell-index\":%d,\"mcc\":%d,\"mnc\":%d,\"rx-level\":%d}},\"locations\":{\"location1\":{\"tstamp\":\%d,\"latitude\":%d,\"longitude\":%d,\"altitude\":%d,\"speed\":%d,\"azimuth\":%d,\"quality\":%d}},\"sensors\":{\"temperature\":{\"tracker\":%d},\"voltage\":{\"external\":{\"ext1\":%d},\"internal\":{\"int1\":%d}},\"dut\":{\"dut1\":%d,\"dut2\":%d}}}'),",gg.tstamp,gg.trackers[gg.i].imei,md.t,gg.trackers[gg.i].versionsw,gg.trackers[gg.i].versionhw,boot_if(),checkPoint(md.t,mblock->cpoint[gg.i].time,gg.i),d344.lac,d344.ci,d344.mcc,d344.mnc,d344.rx,md.t,md.lat,md.lng,d344.alt+d344.alt_hi,d344.speed+d344.speed_hi,d344.dir*2,d344.dop,d344.temp,vv1,vv2,ddyt.dyt1,ddyt.dyt2);
 				strcat(json_query,json_str);
 				}
 			for(x=0;x<4096;x++){

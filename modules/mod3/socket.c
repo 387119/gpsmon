@@ -1,4 +1,4 @@
-#include "queclink.h"
+#include "gpsmon.h"
 
 extern void createSocket(void)
 {

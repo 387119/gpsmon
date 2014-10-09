@@ -1,6 +1,7 @@
 #include "mega-gps.h"
 #include "port.h"
 #include "functions.h"
+#include "func_psql.h"
 #include "functions_v344.h"
 #include "functions_v355.h"
 
@@ -14,6 +15,8 @@ get_data_path ();
 get_copy_path ();
 get_raw_path ();
 m4 ();m5 ();
+ex = 1;
+gstime = 0;
 gg.port = getPort ();									//Читаем порт
 createSocket (&gg.port);								//Создаем сокет
 syslog(LOG_INFO,"Модуль Mega-gps-v355 запушен на порту %d",gg.port);
@@ -26,7 +29,23 @@ gg.packet_counter=0;
 gg.CRC_NO[0]=0xFF;gg.CRC_NO[1]=0;
 gg.CRC_OK[0]=0x01;gg.CRC_OK[1]=0;
 gg.CRC_OKK[0]=0x03;gg.CRC_OKK[1]=2;
-while(1){
+key = ftok(FTOK_FILE, 1);
+if(key==-1){
+	syslog(LOG_INFO,"Функция ftok() вернулась ошибкой");
+	exit(0);
+}
+shmid = shmget(key,sizeof(struct memory_block),0666 | IPC_CREAT);
+if(shmid==-1){
+	syslog(LOG_INFO,"Функция shmget() вернулась ошибкой");
+	//exit(0);
+}
+mblock = (struct memory_block *)shmat(shmid, 0 ,0);
+struct sigaction sa;
+sa.sa_handler = prog_ex;
+sigaction(SIGUSR1, &sa, 0);
+
+while(ex==1){
+	checkOnlineCars(); 			//Чистим структур авторизованных авто
 	memset (&gg.rxbuf,'\0',2048);							//Чистим буфер
 	memset (&gg.clientaddr,'\0',sizeof(gg.clientaddr));				//Чистим структуру данных от трекеров
 	gg.byte_read = recvfrom (gg.sock,gg.rxbuf,2048,0,(struct sockaddr *)&gg.clientaddr,&gg.size_clientaddr);	//Принимаем данные
@@ -165,7 +184,9 @@ while(1){
 	memset(&gg.rxbuf,'\0',2048);
 	memset(&gg.byte_read,'\0',4);
 	}
-
+	shmdt((void *) mblock);
+	shmctl(shmid,IPC_RMID, 0);
+	syslog(LOG_INFO,"Нормальнное завершение программы");
 }
 
 
